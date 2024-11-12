@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 13:42:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/12 15:57:54 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:47:48 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,11 @@ int	initialize_forks(pthread_mutex_t *forks, int num_philosophers)
 	while (i < num_philosophers)
 	{
 		if (pthread_mutex_init(&forks[i], NULL) != 0)
-			return (i);
+		{
+			while(--i >= 0)
+				pthread_mutex_destroy(&forks[i]);
+			return (-1);
+		}
 		i++;
 	}
 	return (0);
