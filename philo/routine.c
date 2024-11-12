@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/12 18:00:44 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/12 18:23:34 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,31 @@ void	*philosopher_routine(void *philosopher_data)
 		usleep(500000);//Value needs to be adjusted
 	}
 	return (NULL);
+}
+int	start_philosophers(t_simulation *simulation)
+{
+	pthread_t	*threads;
+	int			i;
+
+	threads = malloc(sizeof(pthread_t) * simulation->control->number_of_philosophers);
+	if (!threads)
+		return (-1);
+	i = 0;
+	while (i < simulation->control->number_of_philosophers)
+	{
+		if (pthread_create(&threads[i], NULL, philosopher_routine, &simulation->philosophers[i] != 0))
+		{
+			free(threads);
+			return (-1);
+		}
+		i++;
+	}
+	i = 0;
+	while (i < simulation->control->number_of_philosophers)
+	{
+		pthread_join(threads[i], NULL);
+		i++;
+	}
+	free(threads);
+	return (0);
 }

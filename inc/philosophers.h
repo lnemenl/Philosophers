@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/12 12:07:37 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/12 18:20:16 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ typedef struct s_philosopher
 typedef struct s_simulation
 {
 	t_control		*control;
-	t_philosopher	*philosopher;
+	t_philosopher	*philosophers;
 }					t_simulation;
 
 
