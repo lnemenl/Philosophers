@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 13:42:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/12 15:54:47 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:57:54 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,20 @@ int	setup_philosopher(t_philosopher *philosopher, int id, t_control *control)
 	philosopher->last_meal_time = 0;
 	philosopher->left_fork = &control->forks[id];
 	philosopher->right_fork = &control->forks[(id + 1) % control->number_of_philosophers];
+	return (0);
+}
+
+int	initialize_philosophers(t_philosopher *philosophers, int num_philosophers, t_control *control)
+{
+	int	i;
+	
+	i = 0;
+	while (i < num_philosophers)
+	{
+		if (setup_philosopher(&philosophers[i], i, control) != 0)
+			return (i);
+		i++;
+	}
 	return (0);
 }
 
