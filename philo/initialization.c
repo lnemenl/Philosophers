@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 13:42:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/12 13:50:13 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/12 15:54:47 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,3 +48,14 @@ int	initialize_forks(pthread_mutex_t *forks, int num_philosophers)
 	}
 	return (0);
 }
+
+int	setup_philosopher(t_philosopher *philosopher, int id, t_control *control)
+{
+	philosopher->control = control;
+	philosopher->id = id + 1;
+	philosopher->last_meal_time = 0;
+	philosopher->left_fork = &control->forks[id];
+	philosopher->right_fork = &control->forks[(id + 1) % control->number_of_philosophers];
+	return (0);
+}
+
