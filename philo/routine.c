@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/12 18:23:34 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:24:03 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	*philosopher_routine(void *philosopher_data)
 		if (philosopher->control->active_group != (philosopher->id % 2))
 		{
 			pthread_mutex_unlock(&philosopher->control->group_mutex);
-			usleep(200);//Value needs to be adjusted
+			sleep_ms(500);//Value needs to be adjusted
 			continue;
 		}
 		pthread_mutex_unlock(&philosopher->control->group_mutex);
@@ -31,13 +31,13 @@ void	*philosopher_routine(void *philosopher_data)
 		pthread_mutex_lock(philosopher->right_fork);
 		philosopher->last_meal_time = get_current_time_ms();
 		printf("Philosopher %d is eating\n", philosopher->id);
-		usleep(500000);//Value needs to be adjusted
+		sleep_ms(500);//Value needs to be adjusted
 		pthread_mutex_unlock(philosopher->left_fork);
 		pthread_mutex_unlock(philosopher->right_fork);
-		printf("Philosopher %d is thinking\n", philosopher->id);
-		usleep(500000);//Value needs to be adjusted
 		printf("Philosopher %d is sleeping\n", philosopher->id);
-		usleep(500000);//Value needs to be adjusted
+		sleep_ms(500);//Value needs to be adjusted
+		printf("Philosopher %d is thinking\n", philosopher->id);
+		sleep_ms(500);//Value needs to be adjusted
 	}
 	return (NULL);
 }
