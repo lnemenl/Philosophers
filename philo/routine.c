@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 15:07:36 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 17:57:07 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	start_philosophers(t_simulation *simulation)
 	i = 0;
 	while (i < simulation->control->number_of_philosophers)
 	{
-		if (pthread_create(&threads[i], NULL, philosopher_routine, &simulation->philosophers[i] != 0))
+		if (pthread_create(&threads[i], NULL, philosopher_routine, &simulation->philosophers[i]) != 0)
 		{
 			free(threads);
 			return (-1);

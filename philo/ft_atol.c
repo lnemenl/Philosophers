@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 14:07:15 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 14:30:13 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 17:55:36 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,13 @@ long	convert_to_long(const char *str, int sign)
 		{
 			if (sign > 0)
 				return (-1);
-			ruturn (0);
+			return (0);
 		}
 		result = result * 10;
 		if (result > max - (*str - '0'))
 		{
 			if (sign > 0)
-				retunr (-1);
+				return (-1);
 			return (0);
 		}
 		result = result + (*str - '0');

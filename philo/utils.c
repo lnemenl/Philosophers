@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 14:51:39 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 17:56:27 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,4 +41,5 @@ int	get_sign(const char **str)
 			sign = -1;
 		(*str)++;
 	}
+	return (sign);
 }
