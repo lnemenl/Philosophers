@@ -6,9 +6,11 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 13:54:57 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 14:23:17 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 14:25:42 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "philosophers.h"
 
 const char	*skip_whitespace(const char *str)
 {
