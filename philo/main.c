@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:08:49 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 15:24:33 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 18:00:15 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,15 @@ int	main(int ac, char **av)
 	simulation.philosophers = malloc(sizeof(t_philosopher) * control.number_of_philosophers);
 	if (!simulation.philosophers)
 	{
-		free;
+		free_control(simulation.control);
 		return(1);
 	}
 	if (initialize_philosophers(simulation.philosophers, control.number_of_philosophers, simulation.control) != 0)
 	{
-		somecleanup;
+		free_simulation(&simulation);
 		return (1);
 	}
 	result = start_philosophers(&simulation);
-	somecleanup;
+	free_simulation(&simulation);
 	return (result);
 }
