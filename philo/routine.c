@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 13:24:03 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 15:07:36 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,11 @@ void	*philosopher_routine(void *philosopher_data)
 		pthread_mutex_lock(philosopher->right_fork);
 		philosopher->last_meal_time = get_current_time_ms();
 		printf("Philosopher %d is eating\n", philosopher->id);
-		sleep_ms(500);//Value needs to be adjusted
+		sleep_ms(philosopher->control->time_to_eat);//Value needs to be adjusted
 		pthread_mutex_unlock(philosopher->left_fork);
 		pthread_mutex_unlock(philosopher->right_fork);
 		printf("Philosopher %d is sleeping\n", philosopher->id);
-		sleep_ms(500);//Value needs to be adjusted
+		sleep_ms(philosopher->control->time_to_sleep);//Value needs to be adjusted
 		printf("Philosopher %d is thinking\n", philosopher->id);
 		sleep_ms(500);//Value needs to be adjusted
 	}

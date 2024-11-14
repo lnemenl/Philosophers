@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 14:53:46 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 15:04:23 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ typedef struct s_control
 	pthread_mutex_t	group_mutex;
 	pthread_mutex_t	*forks;
 	long			time_to_die;
+	long			time_to_eat;
 	long			time_to_sleep;
-	long			time_to_think;
 }					t_control;
 
 typedef struct s_philosopher
