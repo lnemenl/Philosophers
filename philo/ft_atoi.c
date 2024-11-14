@@ -6,31 +6,14 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 13:54:57 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 14:25:42 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/14 14:51:09 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-const char	*skip_whitespace(const char *str)
-{
-	while ((*str >= 9 && *str <= 13) || *str == ' ')
-		str++;
-	return (str);
-}
-
-int	get_sign(const char **str)
-{
-	int	sign;
-	
-	sign = 1;
-	if (**str == '-' || **str == '+')
-	{
-		if (**str == '-')
-			sign = -1;
-		(*str)++;
-	}
-}
+const char	*skip_whitespace(const char *str);
+int	get_sign(const char **str);
 
 int	convert_to_int(const char *str, int sign)
 {
