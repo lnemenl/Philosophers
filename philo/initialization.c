@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 13:42:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/12 16:47:48 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 14:23:18 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ t_control	*initialize_control(int num_philosophers)
 		return (NULL);
 	control->number_of_philosophers = num_philosophers;
 	control->active_group = 0;
-	if (pthread_mutex_init(&control->group_mutex, NULL) != 0)
+	control->group_eating_count = 0;
+	if (pthread_mutex_init(&control->control_mutex, NULL) != 0)
 	{
 		free(control);
 		return (NULL);
@@ -29,7 +30,7 @@ t_control	*initialize_control(int num_philosophers)
 	control->forks = malloc(sizeof(pthread_mutex_t) * num_philosophers);
 	if (!control->forks)
 	{
-		pthread_mutex_destroy(&control->group_mutex);
+		pthread_mutex_destroy(&control->control_mutex);
 		free(control);
 		return (NULL);
 	}

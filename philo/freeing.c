@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:54:11 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 17:54:19 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 14:23:10 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	free_control(t_control *control)
 			pthread_mutex_destroy(&control->forks[i]);
 			i++;
 		}
-		pthread_mutex_destroy(&control->group_mutex);
+		pthread_mutex_destroy(&control->control_mutex);
 		free(control->forks);
 	}
 	free(control);
