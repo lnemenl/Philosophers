@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:08:49 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/14 18:41:57 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 18:24:05 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int	main(int ac, char **av)
 {
 	t_control		control;
 	t_simulation	simulation;
+	pthread_t		monitor_thread;
 	int				result;
 	
 	if (parse_arguments(ac, av, &control) != 0)
@@ -34,7 +35,13 @@ int	main(int ac, char **av)
 		free_simulation(&simulation);
 		return (1);
 	}
+	if (pthread_create(&monitor_thread, NULL, monitor_routine, &simulation) != 0)
+	{
+		free_simulation(&simulation);
+		return (1);
+	}
 	result = start_philosophers(&simulation);
+	pthread_join(monitor_thread, NULL);
 	free_simulation(&simulation);
 	return (result);
 }

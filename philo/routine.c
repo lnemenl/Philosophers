@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 14:46:14 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 18:26:10 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,13 @@ void	*philosopher_routine(void *philosopher_data)
 	philosopher = (t_philosopher *)philosopher_data;
 	while (1)
 	{
+		pthread_mutex_lock(&philosopher->control->control_mutex);
+		if (philosopher->control->stop_simulation)
+		{
+			pthread_mutex_unlock(&philosopher->control->control_mutex);
+			return (NULL);
+		}
+		pthread_mutex_unlock(&philosopher->control->control_mutex);
 		if (!check_active_group(philosopher))
 			continue;
 		perform_eating(philosopher);

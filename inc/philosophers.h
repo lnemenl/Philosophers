@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 14:46:10 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 18:25:27 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ typedef struct s_control
 	int				number_of_philosophers;
 	int				active_group;
 	int				group_eating_count;
+	int				stop_simulation;
 	pthread_mutex_t	control_mutex;
 	pthread_mutex_t	*forks;
 	long			time_to_die;
@@ -61,5 +62,9 @@ int         ft_atoi(const char *str);
 long        ft_atol(const char *str);
 void		increment_group_and_toggle(t_philosopher *philosopher);
 void		perform_eating(t_philosopher *philosopher);
-int			check_active_group(t_philosopher *philosopher);
+void		*monitor_routine(void *data);
+int			check_stop_simulation(t_simulation *simulation);
+int			check_philosopher_status(t_simulation *simulation);
+
+
 #endif
