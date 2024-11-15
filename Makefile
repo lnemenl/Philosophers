@@ -6,7 +6,7 @@
 #    By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 18:06:36 by rkhakimu          #+#    #+#              #
-#    Updated: 2024/11/15 18:32:49 by rkhakimu         ###   ########.fr        #
+#    Updated: 2024/11/15 23:12:18 by rkhakimu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,9 @@ SRC_FILES			= $(SRC_DIR)/main.c \
 					  $(SRC_DIR)/utils.c \
 					  $(SRC_DIR)/parsing_args.c \
 					  $(SRC_DIR)/freeing.c \
-					  $(SRC_DIR)/monitor_routine.c
+					  $(SRC_DIR)/monitor_routine.c \
+					  $(SRC_DIR)/helper_functions.c \
+					  $(SRC_DIR)/check.c
 
 OBJ_FILES			= $(SRC_FILES:.c=.o)
 

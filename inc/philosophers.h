@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 18:31:29 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 23:10:24 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 typedef struct s_control
 {
 	int				number_of_philosophers;
-	int				active_group;
-	int				group_eating_count;
 	int				stop_simulation;
 	pthread_mutex_t	control_mutex;
 	pthread_mutex_t	*forks;
@@ -60,10 +58,15 @@ long        get_current_time_ms();
 void        sleep_ms(long milliseconds);
 int         ft_atoi(const char *str);
 long        ft_atol(const char *str);
-void		increment_group_and_toggle(t_philosopher *philosopher);
 void		perform_eating(t_philosopher *philosopher);
 void		*monitor_routine(void *data);
 int			check_stop_simulation(t_simulation *simulation);
 int			check_philosopher_status(t_simulation *simulation);
+void		destroy_forks(pthread_mutex_t *forks, int num_initialized);
+int			should_stop_simulation(t_philosopher *philosopher);
+void		handle_eating(t_philosopher *philosopher);
+void		handle_sleeping(t_philosopher *philosopher);
+void		handle_thinking(t_philosopher *philosopher);
+int			initialize_simulation(t_simulation *simulation);
 
 #endif

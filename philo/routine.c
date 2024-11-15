@@ -6,48 +6,23 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 18:47:26 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 22:48:02 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	check_active_group(t_philosopher *philosopher)
-{
-	pthread_mutex_lock(&philosopher->control->control_mutex);
-	if (philosopher->control->active_group != -1 &&
-		philosopher->control->active_group != (philosopher->id % 2))
-	{
-		pthread_mutex_unlock(&philosopher->control->control_mutex);
-		sleep_ms(100);
-		return (0);
-	}
-	pthread_mutex_unlock(&philosopher->control->control_mutex);
-	return (1);
-}
-
 void	perform_eating(t_philosopher *philosopher)
 {
 	pthread_mutex_lock(philosopher->left_fork);
+	printf("%ld Philosopher %d has taken a fork\n", get_current_time_ms(), philosopher->id);
 	pthread_mutex_lock(philosopher->right_fork);
+	printf("%ld Philosopher %d has taken a fork\n", get_current_time_ms(), philosopher->id);
 	philosopher->last_meal_time = get_current_time_ms();
-	printf("%ld Philosopher %d is eating\n", get_current_time_ms(), philosopher->id);
+	printf("%ld Philosopher %d is eating\n", philosopher->last_meal_time, philosopher->id);
 	sleep_ms(philosopher->control->time_to_eat);
-	pthread_mutex_unlock(philosopher->left_fork);
 	pthread_mutex_unlock(philosopher->right_fork);
-}
-
-void	increment_group_and_toggle(t_philosopher *philosopher)
-{
-	pthread_mutex_lock(&philosopher->control->control_mutex);
-	philosopher->control->group_eating_count++;
-	if (philosopher->control->group_eating_count >= philosopher->control->number_of_philosophers / 2)
-	{
-		philosopher->control->active_group = 1 - philosopher->control->active_group;
-		philosopher->control->group_eating_count = 0;
-		printf("Group toggled. Active group: %d\n", philosopher->control->active_group);
-	}
-	pthread_mutex_unlock(&philosopher->control->control_mutex);
+	pthread_mutex_unlock(philosopher->left_fork);
 }
 
 void	*philosopher_routine(void *philosopher_data)
@@ -57,21 +32,12 @@ void	*philosopher_routine(void *philosopher_data)
 	philosopher = (t_philosopher *)philosopher_data;
 	while (1)
 	{
-		pthread_mutex_lock(&philosopher->control->control_mutex);
-		if (philosopher->control->stop_simulation)
-		{
-			pthread_mutex_unlock(&philosopher->control->control_mutex);
+		if (should_stop_simulation(philosopher))
 			return (NULL);
-		}
-		pthread_mutex_unlock(&philosopher->control->control_mutex);
-		if (!check_active_group(philosopher))
-			continue;
-		perform_eating(philosopher);
-		increment_group_and_toggle(philosopher);
-		printf("%ld Philosopher %d is sleeping\n", get_current_time_ms(), philosopher->id);
-        sleep_ms(philosopher->control->time_to_sleep);
-        printf("%ld Philosopher %d is thinking\n", get_current_time_ms(), philosopher->id);
-        sleep_ms(100); // Simulate thinking
+
+		handle_eating(philosopher);
+		handle_sleeping(philosopher);
+		handle_thinking(philosopher);
 	}
 	return (NULL);
 }

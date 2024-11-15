@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:54:11 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 14:23:10 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 22:17:19 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,4 +36,14 @@ void	free_simulation(t_simulation *simulation)
 		free(simulation->philosophers);
 	free_control(simulation->control);
 }
+void	destroy_forks(pthread_mutex_t *forks, int num_initialized)
+{
+	int	i;
 
+	i = 0;
+	while (i < num_initialized)
+	{
+		pthread_mutex_destroy(&forks[i]);
+		i++;
+	}
+}
