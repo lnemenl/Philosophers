@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 18:38:54 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 18:47:26 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 int	check_active_group(t_philosopher *philosopher)
 {
 	pthread_mutex_lock(&philosopher->control->control_mutex);
-	if (philosopher->control->active_group != (philosopher->id % 2))
+	if (philosopher->control->active_group != -1 &&
+		philosopher->control->active_group != (philosopher->id % 2))
 	{
 		pthread_mutex_unlock(&philosopher->control->control_mutex);
 		sleep_ms(100);
@@ -44,6 +45,7 @@ void	increment_group_and_toggle(t_philosopher *philosopher)
 	{
 		philosopher->control->active_group = 1 - philosopher->control->active_group;
 		philosopher->control->group_eating_count = 0;
+		printf("Group toggled. Active group: %d\n", philosopher->control->active_group);
 	}
 	pthread_mutex_unlock(&philosopher->control->control_mutex);
 }
