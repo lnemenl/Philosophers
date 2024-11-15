@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 18:26:41 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 18:33:13 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*monitor_routine(void *data)
 	t_simulation	*simulation;
 	
 	simulation = (t_simulation *)data;
-	while (1);
+	while (1)
 	{
 		if (check_stop_simulation(simulation))
 			return (NULL);

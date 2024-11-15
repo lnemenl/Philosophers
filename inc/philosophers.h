@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 18:25:27 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 18:31:29 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,5 @@ void		perform_eating(t_philosopher *philosopher);
 void		*monitor_routine(void *data);
 int			check_stop_simulation(t_simulation *simulation);
 int			check_philosopher_status(t_simulation *simulation);
-
 
 #endif
