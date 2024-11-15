@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 22:45:59 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 23:06:49 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/15 23:40:00 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,5 +44,5 @@ void	handle_sleeping(t_philosopher *philosopher)
 void	handle_thinking(t_philosopher *philosopher)
 {
 	printf("%ld Philosopher %d is thinking\n", get_current_time_ms(), philosopher->id);
-	sleep_ms(5);
+	sleep_ms(10);
 }
