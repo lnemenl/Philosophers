@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 16:27:52 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:43:44 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,9 @@ int handle_one_philosopher(t_shared *shared)
 {
     if (shared->num_philosophers == 1)
     {
-        handle_one_philosopher(shared);
+        printf("%ld 1 has taken a fork\n", get_current_time());
+        usleep(shared->time_to_die * 1000); // Wait for the philosopher to "die"
+        printf("%ld 1 died\n", get_current_time());
         return (1);
     }
     return (0);

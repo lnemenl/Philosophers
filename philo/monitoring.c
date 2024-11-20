@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 15:50:56 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:48:31 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void *monitor_health(void *arg)
     {
         if (check_starvation(philosophers, shared) || check_meal_requirement(philosophers, shared))
             return (NULL);
-        usleep(1000); // Check every 1 ms
+        usleep(5000); // Check every 5 ms
     }
     return (NULL);
 }

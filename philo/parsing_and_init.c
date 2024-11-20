@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 15:53:25 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:47:18 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,10 @@ int parse_input(int argc, char **argv, t_shared *shared)
 {
     if (argc < 5 || argc > 6)
         return (1);
-    shared->num_philosophers = atoi(argv[1]);
-    shared->time_to_die = atoi(argv[2]);
-    shared->time_to_eat = atoi(argv[3]);
-    shared->time_to_sleep = atoi(argv[4]);
-    shared->meals_required = (argc == 6) ? atoi(argv[5]) : -1; // Optional argument
+    shared->num_philosophers = ft_atoi(argv[1]);
+    shared->time_to_die = ft_atoi(argv[2]);
+    shared->time_to_eat = ft_atoi(argv[3]);
+    shared->time_to_sleep = ft_atoi(argv[4]);
     if (shared->num_philosophers <= 0 || shared->time_to_die <= 0 || 
         shared->time_to_eat <= 0 || shared->time_to_sleep <= 0)
         return (1);
@@ -80,14 +79,9 @@ t_philosopher *init_philosophers(t_shared *shared)
 
 int initialize_simulation(int argc, char **argv, t_shared *shared)
 {
-    if (parse_input(argc, argv, shared))
+    if (parse_input(argc, argv, shared) || init_shared_resources(shared))
     {
-        printf("Error: Invalid input\n");
-        return (1);
-    }
-    if (init_shared_resources(shared))
-    {
-        printf("Error: Resource initialization failed\n");
+        printf("Error: Simulation initialization failed\n");
         return (1);
     }
     return (0);

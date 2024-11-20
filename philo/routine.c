@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 15:19:39 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:43:08 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,7 @@ void take_forks(t_philosopher *philo)
         pthread_mutex_lock(philo->left_fork);
         pthread_mutex_lock(philo->right_fork);
     }
-    pthread_mutex_lock(&philo->shared->write_lock);
-    printf("%ld %d has taken a fork\n", get_current_time(), philo->id);
-    pthread_mutex_unlock(&philo->shared->write_lock);
+    log_action(philo, "has taken a fork");
 }
 
 void release_forks(t_philosopher *philo)
@@ -41,24 +39,15 @@ void eat(t_philosopher *philo)
     philo->last_meal_time = get_current_time();
     philo->meals_eaten++;
     pthread_mutex_unlock(&philo->shared->monitor_lock);
-
-    pthread_mutex_lock(&philo->shared->write_lock);
-    printf("%ld %d is eating\n", get_current_time(), philo->id);
-    pthread_mutex_unlock(&philo->shared->write_lock);
-
+    log_action(philo, "is eating");
     usleep(philo->shared->time_to_eat * 1000);
 }
 
 void sleep_and_think(t_philosopher *philo)
 {
-    pthread_mutex_lock(&philo->shared->write_lock);
-    printf("%ld %d is sleeping\n", get_current_time(), philo->id);
-    pthread_mutex_unlock(&philo->shared->write_lock);
+    log_action(philo, "is sleeping");
     usleep(philo->shared->time_to_sleep * 1000);
-
-    pthread_mutex_lock(&philo->shared->write_lock);
-    printf("%ld %d is thinking\n", get_current_time(), philo->id);
-    pthread_mutex_unlock(&philo->shared->write_lock);
+    log_action(philo, "is thinking");
 }
 
 void *philosopher_routine(void *arg)

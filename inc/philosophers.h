@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 16:23:40 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:53:12 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_shared
 	int                 time_to_sleep;
 	int                 meals_required;     // Optional: number_of_times_each_philosopher_must_eat
 	int                 is_simulation_running;
-	pthread_mutex_t     *forks;             // Array of mutexes for forks
+	pthread_mutex_t     *forks;
 	pthread_mutex_t     write_lock;         // Mutex for logging
 	pthread_mutex_t     monitor_lock;       // Mutex to protect simulation state
 }               		t_shared;
@@ -68,7 +68,8 @@ long			get_current_time(void);
 int				get_sign(const char **str);
 const char		*skip_whitespace(const char *str);
 void			log_action(t_philosopher *philo, const char *action);
-
+int				convert_to_int(const char *str, int sign);
+int				ft_atoi(const char *str);
 /* Thread Management */
 int				create_threads(t_shared *shared, t_philosopher *philosophers, pthread_t *threads);
 void			join_threads(t_shared *shared, pthread_t *threads);
