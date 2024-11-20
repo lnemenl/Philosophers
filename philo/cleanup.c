@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:37:31 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 16:50:55 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 19:45:01 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,3 +45,4 @@ void cleanup_simulation(t_shared *shared, t_philosopher *philosophers)
     destroy_shared_mutexes(shared);
     free_resources(shared, philosophers);
 }
+

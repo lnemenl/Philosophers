@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 16:47:18 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 19:04:14 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,24 @@
 int parse_input(int argc, char **argv, t_shared *shared)
 {
     if (argc < 5 || argc > 6)
+    {
+        printf("Error: Invalid number of arguments. Usage: ./philosophers num_philosophers time_to_die time_to_eat time_to_sleep [meals_required]\n");
         return (1);
+    }
     shared->num_philosophers = ft_atoi(argv[1]);
     shared->time_to_die = ft_atoi(argv[2]);
     shared->time_to_eat = ft_atoi(argv[3]);
     shared->time_to_sleep = ft_atoi(argv[4]);
-    if (shared->num_philosophers <= 0 || shared->time_to_die <= 0 || 
+    if (shared->num_philosophers <= 0 || shared->time_to_die <= 0 ||
         shared->time_to_eat <= 0 || shared->time_to_sleep <= 0)
+    {
+        printf("Error: All timing values must be positive integers in ms.\n");
         return (1);
+    }
     shared->is_simulation_running = 1;
     return (0);
 }
+
 
 int init_shared_resources(t_shared *shared)
 {
@@ -68,7 +75,7 @@ t_philosopher *init_philosophers(t_shared *shared)
     {
         philosophers[i].id = i + 1;
         philosophers[i].meals_eaten = 0;
-        philosophers[i].last_meal_time = 0;
+        philosophers[i].last_meal_time = get_current_time();
         philosophers[i].left_fork = &shared->forks[i];
         philosophers[i].right_fork = &shared->forks[(i + 1) % shared->num_philosophers];
         philosophers[i].shared = shared;

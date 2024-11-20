@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 16:53:12 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 19:47:40 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int				get_sign(const char **str);
 const char		*skip_whitespace(const char *str);
 void			log_action(t_philosopher *philo, const char *action);
 int				convert_to_int(const char *str, int sign);
+void			wait_or_exit(t_philosopher *philo, int milliseconds);
+void			stop_simulation(t_shared *shared);
 int				ft_atoi(const char *str);
 /* Thread Management */
 int				create_threads(t_shared *shared, t_philosopher *philosophers, pthread_t *threads);

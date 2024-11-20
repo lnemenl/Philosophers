@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 16:50:29 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 20:26:10 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,20 @@ int create_threads(t_shared *shared, t_philosopher *philosophers, pthread_t *thr
     {
         if (pthread_create(&threads[i], NULL, philosopher_routine, &philosophers[i]) != 0)
         {
-            shared->is_simulation_running = 0; // Stop the simulation on failure
-            return (1); // Return error
+            printf("Error: Failed to create thread for philosopher %d\n", i + 1);
+            shared->is_simulation_running = 0;
+            return (1);
         }
+        usleep(100);
         i++;
     }
     if (pthread_create(&threads[i], NULL, monitor_health, philosophers) != 0)
     {
-        shared->is_simulation_running = 0; // Stop the simulation on failure
-        return (1); // Return error
+        printf("Error: Failed to create monitor thread\n");
+        shared->is_simulation_running = 0;
+        return (1);
     }
-    return (0); // Successfully created all threads
+    return (0);
 }
 
 
@@ -42,7 +45,7 @@ void join_threads(t_shared *shared, pthread_t *threads)
     i = 0;
     while (i < shared->num_philosophers + 1)
     {
-        pthread_join(threads[i], NULL); // Join both philosopher and monitor threads
+        pthread_join(threads[i], NULL);
         i++;
     }
 }
@@ -57,7 +60,7 @@ int start_threads(t_shared *shared, t_philosopher *philosophers, pthread_t **thr
     }
     if (create_threads(shared, philosophers, *threads))
     {
-        free(*threads); // Free memory for thread handles
+        free(*threads);
         return (1);
     }
     return (0);
