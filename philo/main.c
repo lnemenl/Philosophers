@@ -6,46 +6,35 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:08:49 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 23:35:04 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 16:14:07 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	main(int ac, char **av)
+int main(int argc, char **argv)
 {
-	t_simulation	simulation;
-	pthread_t		monitor_thread;
+    t_shared        shared;
+    t_philosopher   *philosophers;
+    pthread_t       *threads;
 
-	simulation.control = malloc(sizeof(t_control));
-	if (!simulation.control)
-	{
-		printf("Error: Failed to allocate memory for control\n");
-		return (1);
-	}
-	if (parse_arguments(ac, av, simulation.control) != 0)
-	{
-		free(simulation.control);
-		return (1);
-	}
-	simulation.control = initialize_control(simulation.control->number_of_philosophers);
-	if (!simulation.control)
-	{
-		free(simulation.control);
-		return (1);
-	}
-	if (initialize_simulation(&simulation) != 0)
-	{
-		free_control(simulation.control);
-		return (1);
-	}
-	if (pthread_create(&monitor_thread, NULL, monitor_routine, &simulation) != 0)
-	{
-		free_simulation(&simulation);
-		return (1);
-	}
-	start_philosophers(&simulation);
-	pthread_join(monitor_thread, NULL);
-	free_simulation(&simulation);
-	return (0);
+    if (initialize_simulation(argc, argv, &shared))
+        return (1);
+    if (handle_one_philosopher(&shared))
+        return (0);
+    philosophers = init_philosophers(&shared);
+    if (!philosophers)
+    {
+        printf("Error: Philosopher initialization failed\n");
+        return (1);
+    }
+    if (start_threads(&shared, philosophers, &threads))
+    {
+        cleanup_simulation(&shared, philosophers);
+        return (1);
+    }
+    join_threads(&shared, threads);
+    cleanup_simulation(&shared, philosophers);
+    return (0);
 }
+

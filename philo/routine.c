@@ -6,66 +6,71 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/15 22:48:02 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/20 15:19:39 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	perform_eating(t_philosopher *philosopher)
+void take_forks(t_philosopher *philo)
 {
-	pthread_mutex_lock(philosopher->left_fork);
-	printf("%ld Philosopher %d has taken a fork\n", get_current_time_ms(), philosopher->id);
-	pthread_mutex_lock(philosopher->right_fork);
-	printf("%ld Philosopher %d has taken a fork\n", get_current_time_ms(), philosopher->id);
-	philosopher->last_meal_time = get_current_time_ms();
-	printf("%ld Philosopher %d is eating\n", philosopher->last_meal_time, philosopher->id);
-	sleep_ms(philosopher->control->time_to_eat);
-	pthread_mutex_unlock(philosopher->right_fork);
-	pthread_mutex_unlock(philosopher->left_fork);
+    if (philo->id % 2 == 0)
+    {
+        pthread_mutex_lock(philo->right_fork);
+        pthread_mutex_lock(philo->left_fork);
+    }
+    else
+    {
+        pthread_mutex_lock(philo->left_fork);
+        pthread_mutex_lock(philo->right_fork);
+    }
+    pthread_mutex_lock(&philo->shared->write_lock);
+    printf("%ld %d has taken a fork\n", get_current_time(), philo->id);
+    pthread_mutex_unlock(&philo->shared->write_lock);
 }
 
-void	*philosopher_routine(void *philosopher_data)
+void release_forks(t_philosopher *philo)
 {
-	t_philosopher	*philosopher;
-
-	philosopher = (t_philosopher *)philosopher_data;
-	while (1)
-	{
-		if (should_stop_simulation(philosopher))
-			return (NULL);
-
-		handle_eating(philosopher);
-		handle_sleeping(philosopher);
-		handle_thinking(philosopher);
-	}
-	return (NULL);
+    pthread_mutex_unlock(philo->left_fork);
+    pthread_mutex_unlock(philo->right_fork);
 }
 
-int	start_philosophers(t_simulation *simulation)
+void eat(t_philosopher *philo)
 {
-	pthread_t	*threads;
-	int			i;
+    pthread_mutex_lock(&philo->shared->monitor_lock);
+    philo->last_meal_time = get_current_time();
+    philo->meals_eaten++;
+    pthread_mutex_unlock(&philo->shared->monitor_lock);
 
-	threads = malloc(sizeof(pthread_t) * simulation->control->number_of_philosophers);
-	if (!threads)
-		return (-1);
-	i = 0;
-	while (i < simulation->control->number_of_philosophers)
-	{
-		if (pthread_create(&threads[i], NULL, philosopher_routine, &simulation->philosophers[i]) != 0)
-		{
-			free(threads);
-			return (-1);
-		}
-		i++;
-	}
-	i = 0;
-	while (i < simulation->control->number_of_philosophers)
-	{
-		pthread_join(threads[i], NULL);
-		i++;
-	}
-	free(threads);
-	return (0);
+    pthread_mutex_lock(&philo->shared->write_lock);
+    printf("%ld %d is eating\n", get_current_time(), philo->id);
+    pthread_mutex_unlock(&philo->shared->write_lock);
+
+    usleep(philo->shared->time_to_eat * 1000);
+}
+
+void sleep_and_think(t_philosopher *philo)
+{
+    pthread_mutex_lock(&philo->shared->write_lock);
+    printf("%ld %d is sleeping\n", get_current_time(), philo->id);
+    pthread_mutex_unlock(&philo->shared->write_lock);
+    usleep(philo->shared->time_to_sleep * 1000);
+
+    pthread_mutex_lock(&philo->shared->write_lock);
+    printf("%ld %d is thinking\n", get_current_time(), philo->id);
+    pthread_mutex_unlock(&philo->shared->write_lock);
+}
+
+void *philosopher_routine(void *arg)
+{
+    t_philosopher *philo = (t_philosopher *)arg;
+
+    while (philo->shared->is_simulation_running)
+    {
+        take_forks(philo);
+        eat(philo);
+        release_forks(philo);
+        sleep_and_think(philo);
+    }
+    return (NULL);
 }
