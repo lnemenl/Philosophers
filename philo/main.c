@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:08:49 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/20 16:14:07 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/21 12:54:07 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,4 +37,3 @@ int main(int argc, char **argv)
     cleanup_simulation(&shared, philosophers);
     return (0);
 }
-
