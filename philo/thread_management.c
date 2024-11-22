@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/21 16:25:11 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/22 19:34:57 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	join_threads(t_shared *shared, pthread_t *threads)
     int i;
 
 	i = 0;
-    while (i < shared->num_philosophers + 1) // +1 for monitor thread
+    while (i < shared->num_philosophers + 1)
     {
         pthread_join(threads[i], NULL);
         i++;
@@ -51,7 +51,7 @@ void	join_threads(t_shared *shared, pthread_t *threads)
 
 int	start_threads(t_shared *shared, t_philosopher *philosophers, pthread_t **threads)
 {
-    *threads = malloc(sizeof(pthread_t) * (shared->num_philosophers + 1)); // +1 for monitor thread
+    *threads = malloc(sizeof(pthread_t) * (shared->num_philosophers + 1));
     if (!(*threads))
     {
         printf("Error: Memory allocation for threads failed\n");
