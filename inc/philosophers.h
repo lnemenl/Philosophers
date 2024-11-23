@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/23 21:14:28 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/23 21:29:29 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,3 +75,5 @@ void			cleanup_simulation(t_shared *shared, t_philosopher *philosophers);
 void            free_resources(t_shared *shared, t_philosopher *philosophers);
 
 #endif
+
+//need some adjustments to address possible data race according to valgrind --tool=helgrind
