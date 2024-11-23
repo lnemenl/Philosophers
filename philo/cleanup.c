@@ -6,11 +6,9 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:37:31 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/21 15:15:42 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/23 14:52:51 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include "philosophers.h"
 
 #include "philosophers.h"
 
