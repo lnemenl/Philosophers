@@ -6,34 +6,50 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:37:31 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/23 21:16:30 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/26 19:50:35 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static void	destroy_mutex(pthread_mutex_t *mutex, const char *error_message)
+void destroy_fork_mutexes(pthread_mutex_t *forks_mutex, int num_philosophers)
 {
-    if (pthread_mutex_destroy(mutex) != 0)
-        printf("Error: %s\n", error_message);
+    int i;
+
+    i = 0;
+    if (!forks_mutex)
+        return ;
+    while (i < num_philosophers)
+    {
+        pthread_mutex_destroy(&forks_mutex[i]);
+        i++;
+    }
+    free(forks_mutex);
 }
 
-void	destroy_shared_mutexes(t_shared *shared)
+
+void destroy_write_mutex(pthread_mutex_t *write_mutex)
 {
-    destroy_mutex(&shared->forks_mutex, "Failed to destroy forks mutex");
-    destroy_mutex(&shared->write_mutex, "Failed to destroy write mutex");
+    pthread_mutex_destroy(write_mutex);
 }
 
-void	free_resources(t_shared *shared, t_philosopher *philosophers)
+void cleanup_shared_resources(t_shared *shared)
 {
-	if (shared->forks)
-		free(shared->forks);
-	if (philosophers)
-		free(philosophers);
+    destroy_fork_mutexes(shared->forks_mutex, shared->num_philosophers);
+    destroy_write_mutex(&shared->write_mutex);
 }
 
-void	cleanup_simulation(t_shared *shared, t_philosopher *philosophers)
+void cleanup_simulation(t_shared *shared, t_philosopher *philosophers)
 {
-    destroy_shared_mutexes(shared);
-    free_resources(shared, philosophers);
+    int i;
+
+    i = 0;
+    while (i < shared->num_philosophers)
+    {
+        pthread_mutex_destroy(&philosophers[i].meal_mutex);
+        i++;
+    }
+    cleanup_shared_resources(shared);
+    free(philosophers);
 }
+
