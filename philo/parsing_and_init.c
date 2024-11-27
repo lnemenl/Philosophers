@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/23 21:15:46 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/27 17:03:46 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,37 +33,38 @@ int	parse_input(int argc, char **argv, t_shared *shared)
 	return (0);
 }
 
-int	initialize_forks(t_shared *shared, int i)
+int	init_fork_mutex(t_shared *shared, int i)
 {
-	if (i >= shared->num_philosophers)
-		return (0);
-	shared->forks[i] = 0;
-	return (initialize_forks(shared, i + 1));
+    if (i >= shared->num_philosophers)
+        return (0);
+    
+    if (pthread_mutex_init(&shared->fork_mutexes[i], NULL) != 0)
+    {
+        while (i > 0)
+        {
+            i--;
+            pthread_mutex_destroy(&shared->fork_mutexes[i]);
+        }
+        free(shared->fork_mutexes);
+        return (1);
+    }   
+    return (init_fork_mutex(shared, i + 1));
 }
-
 int initialize_shared_resources(t_shared *shared)
 {
-	int	i;
-
-    shared->forks = malloc(sizeof(int) * shared->num_philosophers);
-    if (!shared->forks)
+    shared->fork_mutexes = malloc(sizeof(pthread_mutex_t) * shared->num_philosophers);
+    if (!shared->fork_mutexes)
         return (1);
-    i = 0;
-    while (i < shared->num_philosophers)
-	{
-        shared->forks[i] = 0;
-        i++;
-    }
-    if (pthread_mutex_init(&shared->forks_mutex, NULL) != 0)
+    if (init_fork_mutex(shared, 0) != 0)
         return (1);
     if (pthread_mutex_init(&shared->write_mutex, NULL) != 0)
-	{
-        pthread_mutex_destroy(&shared->forks_mutex);
+    {
+        destroy_fork_mutexes(shared, 0);
+        free(shared->fork_mutexes);
         return (1);
     }
     return (0);
 }
-
 
 int	setup_philosopher(t_philosopher *philosophers, t_shared *shared, int i)
 {

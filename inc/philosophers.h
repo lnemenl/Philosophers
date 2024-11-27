@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/23 21:29:29 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/27 17:12:11 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ typedef struct s_shared
 	int					time_to_eat;
 	int					time_to_sleep;
 	int					is_simulation_running;
-	int                 *forks;
-	pthread_mutex_t		forks_mutex;
+	pthread_mutex_t		*fork_mutexes;
 	pthread_mutex_t		write_mutex;
 }						t_shared;
 
@@ -42,10 +41,10 @@ typedef struct s_philosopher
 
 /* Parsing and Initialization */
 int				parse_input(int argc, char **argv, t_shared *shared);
-int             initialize_forks(t_shared *shared, int i);
 int             initialize_shared_resources(t_shared *shared);
 int             setup_philosopher(t_philosopher *philosophers, t_shared *shared, int i);
 int             initialize_simulation(int argc, char **argv, t_shared *shared);
+int				init_fork_mutex(t_shared *shared, int i);
 t_philosopher   *init_philosophers(t_shared *shared);
 
 /* Simulation Actions */
@@ -73,7 +72,7 @@ void			wait_or_exit(t_philosopher *philo, int milliseconds);
 void			destroy_shared_mutexes(t_shared *shared);
 void			cleanup_simulation(t_shared *shared, t_philosopher *philosophers);
 void            free_resources(t_shared *shared, t_philosopher *philosophers);
-
+void			destroy_fork_mutexes(t_shared *shared, int i);
 #endif
 
 //need some adjustments to address possible data race according to valgrind --tool=helgrind
