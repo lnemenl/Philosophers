@@ -6,13 +6,13 @@
 #    By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 18:06:36 by rkhakimu          #+#    #+#              #
-#    Updated: 2024/11/20 16:51:57 by rkhakimu         ###   ########.fr        #
+#    Updated: 2024/11/27 18:28:20 by rkhakimu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME				= philosophers
 CC					= cc
-CFLAGS				= -Wall -Wextra -Werror -I./inc
+CFLAGS				= -Wall -Wextra -Werror -I./inc -fsanitize=thread
 
 SRC_DIR				= philo
 INC_DIR				= inc

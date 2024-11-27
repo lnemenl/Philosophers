@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/27 17:12:15 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/27 18:14:10 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,11 @@ int	has_starvation_occurred(t_philosopher *philosophers, int num_philosophers, i
 }
 
 
-void	*monitor_health(void *arg)
+void *monitor_health(void *arg)
 {
-    t_philosopher	*philosophers;
-    t_shared		*shared;
-    int				starved_philosopher;
-
-    philosophers = (t_philosopher *)arg;
-    shared = philosophers[0].shared;
+    t_philosopher *philosophers = (t_philosopher *)arg;
+    t_shared *shared = philosophers[0].shared;
+    int starved_philosopher;
 
     while (shared->is_simulation_running)
     {
@@ -58,7 +55,7 @@ void	*monitor_health(void *arg)
                 shared->is_simulation_running = 0;
             }
             pthread_mutex_unlock(&shared->write_mutex);
-            return (NULL);
+            break;
         }
         usleep(1000);
     }
