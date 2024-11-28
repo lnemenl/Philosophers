@@ -6,13 +6,13 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 19:59:19 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 23:27:28 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-long long get_current_time(void)
+long long get_current_time_ms(void)
 {
     struct timeval tv;
 
@@ -24,17 +24,23 @@ long long get_current_time(void)
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void print_status(t_philosopher *philo, const char *status)
+void log_action(t_philosopher *philosopher, const char *action)
 {
-    long long timestamp;
+    t_shared *shared;
 
-    safe_mutex_lock(&philo->table->write_lock);
-    if (!philo->table->simulation_end)
-    {
-        timestamp = get_current_time() - philo->table->start_time;
-        printf("%lld %d %s\n", timestamp, philo->id, status);
-    }
-    safe_mutex_unlock(&philo->table->write_lock);
+    shared = philosopher->shared_data;
+    pthread_mutex_lock(&shared->log_lock);
+    printf("%lld %d %s\n", get_current_time_ms(), philosopher->id, action);
+    pthread_mutex_unlock(&shared->log_lock);
+}
+
+void smart_sleep(int duration, t_shared *shared)
+{
+    long long start_time;
+    
+    start_time = get_current_time_ms();
+    while (!shared->simulation_end && (get_current_time_ms() - start_time < duration))
+        usleep(50);
 }
 
 int safe_mutex_lock(pthread_mutex_t *mutex)
