@@ -6,71 +6,44 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 02:40:02 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 21:38:19 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static int allocate_resources(t_table *table)
+int init_shared_data(t_shared *shared, char **argv)
 {
-    table->philosophers = NULL;
-    table->forks = NULL;
-
-    table->philosophers = malloc(sizeof(t_philosopher) * table->num_philosophers);
-    if (!table->philosophers)
+    shared->num_philosophers = safe_atoi(argv[1]);
+    shared->time_to_die = safe_atoi(argv[2]);
+    shared->time_to_eat = safe_atoi(argv[3]);
+    shared->time_to_sleep = safe_atoi(argv[4]);
+    if (argv[5])
+        shared->meals_required = safe_atoi(argv[5]);
+    else
+        shared->meals_required = -1;
+    shared->simulation_end = 0;
+    shared->forks = malloc(sizeof(pthread_mutex_t) * shared->num_philosophers);
+    if (!shared->forks)
         return (0);
-    table->forks = malloc(sizeof(pthread_mutex_t) * table->num_philosophers);
-    if (!table->forks)
+    if (pthread_mutex_init(&shared->log_lock, NULL) != 0)
     {
-        free(table->philosophers);
-        table->philosophers = NULL;
-        return (0);
-    }
-    return (1);
-}
-
-static int init_basic_locks(t_table *table)
-{
-    if (pthread_mutex_init(&table->write_lock, NULL) != 0)
-        return (0);
-    if (pthread_mutex_init(&table->waiter, NULL) != 0)
-    {
-        pthread_mutex_destroy(&table->write_lock);
+        free(shared->forks);
         return (0);
     }
     return (1);
 }
-
-void init_philosophers(t_table *table)
+int init_forks(t_shared *shared)
 {
     int i;
-
-    if (!table || table->num_philosophers <= 0)
-        return;
+    
     i = 0;
-    while (i < table->num_philosophers)
+    while (i < shared->num_philosophers)
     {
-        table->philosophers[i].id = i + 1;
-        table->philosophers[i].last_meal_time = table->start_time;
-        table->philosophers[i].meals_eaten = 0;
-        table->philosophers[i].left_fork_id = i;
-        table->philosophers[i].right_fork_id = (i + 1) % table->num_philosophers;
-        table->philosophers[i].table = table;
-        i++;
-    }
-}
-
-int init_mutexes(t_table *table)
-{
-    int i;
-
-    i = 0;
-    while (i < table->num_philosophers)
-    {
-        if (pthread_mutex_init(&table->forks[i], NULL) != 0)
+        if (pthread_mutex_init(&shared->forks[i], NULL) != 0)
         {
-            cleanup_mutexes(table, i);
+            while (--i >= 0)
+                pthread_mutex_destroy(&shared->forks[i]);
             return (0);
         }
         i++;
@@ -78,28 +51,24 @@ int init_mutexes(t_table *table)
     return (1);
 }
 
-int init_table(t_table *table, int argc, char **argv)
+int initialize_simulation(t_shared *shared, int argc, char **argv)
 {
-    if (!parse_arguments(table, argc, argv))
-        return (0);
-    if (!allocate_resources(table))
-        return (0);
-    if (!init_basic_locks(table))
+    if (!parse_arguments(argc, argv, shared))
     {
-        free(table->philosophers);
-        free(table->forks);
+        print_error("Error: Invalid arguments.\n");
         return (0);
     }
-    if (!init_mutexes(table))
+    if (!init_shared_data(shared, argv))
     {
-        pthread_mutex_destroy(&table->write_lock);
-        pthread_mutex_destroy(&table->waiter);
-        free(table->philosophers);
-        free(table->forks);
+        print_error("Error: Failed to initialize shared data.\n");
         return (0);
     }
-    table->simulation_end = 0;
-    table->start_time = get_current_time();
-    init_philosophers(table);
+    if (!init_forks(shared))
+    {
+        free(shared->forks);
+        pthread_mutex_destroy(&shared->log_lock);
+        print_error("Error: Failed to initialize forks.\n");
+        return (0);
+    }
     return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 05:18:36 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 19:59:19 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,18 +35,6 @@ void print_status(t_philosopher *philo, const char *status)
         printf("%lld %d %s\n", timestamp, philo->id, status);
     }
     safe_mutex_unlock(&philo->table->write_lock);
-}
-
-void smart_sleep(long long duration, t_table *table)
-{
-    long long start = get_current_time();
-
-    while (get_current_time() - start < duration)
-    {
-        if (get_simulation_status(table))
-            break;
-        usleep(50);
-    }
 }
 
 int safe_mutex_lock(pthread_mutex_t *mutex)

@@ -6,55 +6,34 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 13:54:57 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/21 15:19:33 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 21:04:58 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-static const char	*skip_whitespace(const char *str)
+int	safe_atoi(const char *str, int *result)
 {
-    while ((*str >= 9 && *str <= 13) || *str == ' ')
-        str++;
-    return (str);
-}
+	long long	num;
+	int			sign;
+	int			i;
 
-static int	get_sign(const char **str)
-{
-    int sign = 1;
-
-    if (**str == '-' || **str == '+')
-    {
-        if (**str == '-')
-            sign = -1;
-        (*str)++;
-    }
-    return (sign);
-}
-
-static int	convert_to_int(const char *str, int sign)
-{
-    long long result = 0;
-    long long max = ((unsigned long long)(-1)) / 2;
-
-    while (*str >= '0' && *str <= '9')
-    {
-        if (result > max / 10 || (result == max / 10 && (*str - '0') > 7))
-        {
-            if (sign > 0)
-                return (-1);
-            else
-                return (0);
-        }
-        result = result * 10 + (*str - '0');
-        str++;
-    }
-    return ((int)(sign * result));
-}
-
-int	ft_atoi(const char *str)
-{
-    str = skip_whitespace(str);
-    int sign = get_sign(&str);
-    return (convert_to_int(str, sign));
+	num = 0;
+	sign = 1;
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i])
+	{
+		num = num * 10 + (str[i] - '0');
+		if ((sign == 1 && num > INT_MAX) || (sign == -1 && -num < INT_MIN))
+			return (0);
+		i++;
+	}
+	*result = (int)(num * sign);
+	return (1);
 }
