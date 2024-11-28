@@ -6,129 +6,127 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/26 19:58:02 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 03:50:01 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void think(t_philosopher *philo)
+static int lock_fork(pthread_mutex_t *fork, t_philosopher *philo)
 {
-    log_action(philo, "is thinking");
-    usleep(1000);
-}
-
-int take_forks(t_philosopher *philo)
-{
-    int left_fork = philo->id - 1;
-    int right_fork = philo->id % philo->shared->num_philosophers;
-
-    pthread_mutex_lock(&philo->shared->write_mutex);
-    if (!philo->shared->is_simulation_running)
+    if (!safe_mutex_lock(fork))
+        return (0);
+    if (philo->table->simulation_end)
     {
-        pthread_mutex_unlock(&philo->shared->write_mutex);
-        return 0; 
+        pthread_mutex_unlock(fork);
+        return (0);
     }
-    pthread_mutex_unlock(&philo->shared->write_mutex);
-    if (left_fork < right_fork)
-    {
-        pthread_mutex_lock(&philo->shared->forks_mutex[left_fork]);
-        pthread_mutex_lock(&philo->shared->forks_mutex[right_fork]);
-    }
-    else
-    {
-        pthread_mutex_lock(&philo->shared->forks_mutex[right_fork]);
-        pthread_mutex_lock(&philo->shared->forks_mutex[left_fork]);
-    }
-    log_action(philo, "has taken forks");
+    print_status(philo, "has taken a fork");
     return (1);
 }
 
-void eat(t_philosopher *philo)
+static void release_forks(t_philosopher *philo)
 {
-    if (!take_forks(philo))
-        return;
+    pthread_mutex_unlock(&philo->table->forks[philo->left_fork_id]);
+    pthread_mutex_unlock(&philo->table->forks[philo->right_fork_id]);
+    printf("Philosopher %d released forks %d and %d\n", 
+           philo->id, philo->left_fork_id, philo->right_fork_id);
+}
 
-    pthread_mutex_lock(&philo->shared->write_mutex);
-    if (!philo->shared->is_simulation_running)
+static int take_forks(t_philosopher *philo)
+{
+    pthread_mutex_t *left_fork = &philo->table->forks[philo->left_fork_id];
+    pthread_mutex_t *right_fork = &philo->table->forks[philo->right_fork_id];
+
+    if (philo->table->simulation_end)
+        return (0);
+    if (!safe_mutex_lock(&philo->table->waiter))
+        return (0);
+    if (philo->table->simulation_end)
     {
-        pthread_mutex_unlock(&philo->shared->write_mutex);
-        release_forks(philo); 
-        return;
+        safe_mutex_unlock(&philo->table->waiter);
+        return (0);
     }
+    if (philo->id % 2 == 0)
+    {
+        if (!lock_fork(left_fork, philo) || !lock_fork(right_fork, philo))
+        {
+            release_forks(philo);
+            safe_mutex_unlock(&philo->table->waiter);
+            return (0);
+        }
+    }
+    else
+    {
+        if (!lock_fork(right_fork, philo) || !lock_fork(left_fork, philo))
+        {
+            release_forks(philo);
+            safe_mutex_unlock(&philo->table->waiter);
+            return (0);
+        }
+    }
+    safe_mutex_unlock(&philo->table->waiter);
+    return (1);
+}
+
+int think(t_philosopher *philo)
+{
+    if (philo->table->simulation_end)
+        return (0);
+    print_status(philo, "is thinking");
+    return (1);
+}
+
+int eat(t_philosopher *philo)
+{
+    if (philo->table->simulation_end)
+        return (0);
+    if (!take_forks(philo))
+        return (0);
+    print_status(philo, "is eating");
+    safe_mutex_lock(&philo->table->write_lock);
     philo->last_meal_time = get_current_time();
     philo->meals_eaten++;
-    log_action(philo, "is eating");
-    pthread_mutex_unlock(&philo->shared->write_mutex);
-
-    usleep(philo->shared->time_to_eat * 1000);
+    safe_mutex_unlock(&philo->table->write_lock);
+    smart_sleep(philo->table->time_to_eat, philo->table);
     release_forks(philo);
+    if (philo->table->simulation_end)
+        return (0);
+    return (1);
 }
 
-
-void release_forks(t_philosopher *philo)
+int sleep_philosopher(t_philosopher *philo)
 {
-    int left_fork;
-    int right_fork;
-
-    left_fork = philo->id - 1;
-    right_fork = philo->id % philo->shared->num_philosophers;
-    pthread_mutex_unlock(&philo->shared->forks_mutex[left_fork]);
-    pthread_mutex_unlock(&philo->shared->forks_mutex[right_fork]);
-}
-
-void sleep_and_rest(t_philosopher *philo)
-{
-    log_action(philo, "is sleeping");
-    usleep(philo->shared->time_to_sleep * 1000);
-}
-
-void single_philosopher_routine(t_philosopher *philo)
-{
-    log_action(philo, "is thinking");
-    usleep(philo->shared->time_to_die * 1000);
-    pthread_mutex_lock(&philo->shared->write_mutex);
-    if (philo->shared->is_simulation_running)
-    {
-        log_action(philo, "died");
-        philo->shared->is_simulation_running = 0;
-    }
-    pthread_mutex_unlock(&philo->shared->write_mutex);
-}
-
-void *general_philosopher_routine(t_philosopher *philo)
-{
-    while (1)
-    {
-        pthread_mutex_lock(&philo->shared->write_mutex);
-        if (!philo->shared->is_simulation_running)
-        {
-            pthread_mutex_unlock(&philo->shared->write_mutex);
-            break;
-        }
-        pthread_mutex_unlock(&philo->shared->write_mutex);
-        think(philo);
-        pthread_mutex_lock(&philo->shared->write_mutex);
-        if (!philo->shared->is_simulation_running)
-        {
-            pthread_mutex_unlock(&philo->shared->write_mutex);
-            break;
-        }
-        pthread_mutex_unlock(&philo->shared->write_mutex);
-        eat(philo);
-        sleep_and_rest(philo);
-    }
-    return NULL;
+    if (philo->table->simulation_end)
+        return (0);
+    print_status(philo, "is sleeping");
+    smart_sleep(philo->table->time_to_sleep, philo->table);
+    return (1);
 }
 
 void *philosopher_routine(void *arg)
 {
     t_philosopher *philo = (t_philosopher *)arg;
 
-    if (philo->shared->num_philosophers == 1)
+    if (philo->table->num_philosophers == 1)
+        return (handle_single_philosopher(philo));
+
+    if (philo->id % 2 == 0)
+        usleep(100); // Stagger start
+
+    while (1)
     {
-        single_philosopher_routine(philo);
-        return NULL;
+        if (philo->table->simulation_end)
+        {
+            printf("Philosopher %d detected simulation end, exiting\n", philo->id);
+            break;
+        }
+        if (!think(philo) || !eat(philo) || !sleep_philosopher(philo))
+        {
+            printf("Philosopher %d exiting due to state failure\n", philo->id);
+            break;
+        }
     }
-    return general_philosopher_routine(philo);
+    printf("Philosopher %d thread terminated\n", philo->id);
+    return (NULL);
 }

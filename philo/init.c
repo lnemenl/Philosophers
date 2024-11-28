@@ -6,100 +6,100 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/26 19:49:31 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 02:40:02 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-pthread_mutex_t *initialize_fork_mutexes(int num_philosophers)
+static int allocate_resources(t_table *table)
 {
-    pthread_mutex_t *forks;
+    table->philosophers = NULL;
+    table->forks = NULL;
+
+    table->philosophers = malloc(sizeof(t_philosopher) * table->num_philosophers);
+    if (!table->philosophers)
+        return (0);
+    table->forks = malloc(sizeof(pthread_mutex_t) * table->num_philosophers);
+    if (!table->forks)
+    {
+        free(table->philosophers);
+        table->philosophers = NULL;
+        return (0);
+    }
+    return (1);
+}
+
+static int init_basic_locks(t_table *table)
+{
+    if (pthread_mutex_init(&table->write_lock, NULL) != 0)
+        return (0);
+    if (pthread_mutex_init(&table->waiter, NULL) != 0)
+    {
+        pthread_mutex_destroy(&table->write_lock);
+        return (0);
+    }
+    return (1);
+}
+
+void init_philosophers(t_table *table)
+{
     int i;
 
-    forks = malloc(sizeof(pthread_mutex_t) * num_philosophers);
-    if (!forks)
-    {
-        printf("Error: Memory allocation for forks failed.\n");
-        return (NULL);
-    }
+    if (!table || table->num_philosophers <= 0)
+        return;
     i = 0;
-    while (i < num_philosophers)
+    while (i < table->num_philosophers)
     {
-        if (pthread_mutex_init(&forks[i], NULL) != 0)
+        table->philosophers[i].id = i + 1;
+        table->philosophers[i].last_meal_time = table->start_time;
+        table->philosophers[i].meals_eaten = 0;
+        table->philosophers[i].left_fork_id = i;
+        table->philosophers[i].right_fork_id = (i + 1) % table->num_philosophers;
+        table->philosophers[i].table = table;
+        i++;
+    }
+}
+
+int init_mutexes(t_table *table)
+{
+    int i;
+
+    i = 0;
+    while (i < table->num_philosophers)
+    {
+        if (pthread_mutex_init(&table->forks[i], NULL) != 0)
         {
-            printf("Error: Failed to initialize fork mutex %d.\n", i);
-            while (--i >= 0)
-                pthread_mutex_destroy(&forks[i]);
-            free(forks);
-            return (NULL);
+            cleanup_mutexes(table, i);
+            return (0);
         }
         i++;
     }
-    return (forks);
+    return (1);
 }
 
-int initialize_write_mutex(pthread_mutex_t *write_mutex)
+int init_table(t_table *table, int argc, char **argv)
 {
-    if (pthread_mutex_init(write_mutex, NULL) != 0)
+    if (!parse_arguments(table, argc, argv))
+        return (0);
+    if (!allocate_resources(table))
+        return (0);
+    if (!init_basic_locks(table))
     {
-        printf("Error: Failed to initialize write mutex.\n");
-        return (1);
+        free(table->philosophers);
+        free(table->forks);
+        return (0);
     }
-    return (0);
-}
-
-int initialize_shared_resources(t_shared *shared)
-{
-    shared->forks_mutex = initialize_fork_mutexes(shared->num_philosophers);
-    if (!shared->forks_mutex)
-        return (1);
-    if (initialize_write_mutex(&shared->write_mutex))
+    if (!init_mutexes(table))
     {
-        destroy_fork_mutexes(shared->forks_mutex, shared->num_philosophers);
-        return (1);
+        pthread_mutex_destroy(&table->write_lock);
+        pthread_mutex_destroy(&table->waiter);
+        free(table->philosophers);
+        free(table->forks);
+        return (0);
     }
-    return (0);
-}
-
-t_philosopher *initialize_philosophers(t_shared *shared)
-{
-    t_philosopher *philosophers;
-    int i;
-
-    philosophers = malloc(sizeof(t_philosopher) * shared->num_philosophers);
-    if (!philosophers)
-        return NULL;
-    i = 0;
-    while (i < shared->num_philosophers)
-    {
-        philosophers[i].id = i + 1;
-        philosophers[i].last_meal_time = 0;
-        philosophers[i].meals_eaten = 0;
-        philosophers[i].shared = shared;
-        if (pthread_mutex_init(&philosophers[i].meal_mutex, NULL) != 0)
-        {
-            while (--i >= 0)
-                pthread_mutex_destroy(&philosophers[i].meal_mutex);
-            free(philosophers);
-            return NULL;
-        }
-        i++;
-    }
-    return philosophers;
-}
-
-t_philosopher *setup_simulation(t_shared *shared)
-{
-    t_philosopher *philosophers;
-
-    if (initialize_shared_resources(shared))
-        return (NULL);
-    philosophers = initialize_philosophers(shared);
-    if (!philosophers)
-    {
-        cleanup_shared_resources(shared);
-        return (NULL);
-    }
-    return (philosophers);
+    table->simulation_end = 0;
+    table->start_time = get_current_time();
+    init_philosophers(table);
+    return (1);
 }

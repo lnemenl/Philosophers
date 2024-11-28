@@ -6,81 +6,85 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/26 18:17:19 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 03:38:20 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
+static int handle_thread_error(t_table *table, int i)
+{
+    printf("Error: Failed to create thread for philosopher %d\n", i);
+    safe_mutex_lock(&table->write_lock);
+    table->simulation_end = 1;
+    safe_mutex_unlock(&table->write_lock);
+    while (--i >= 0)
+        pthread_join(table->philosophers[i].thread, NULL);
+    clean_table(table);
+    return (0);
+}
 
-int create_philosopher_threads(t_philosopher *philosophers, pthread_t *threads, int num_philosophers)
+int create_philosophers(t_table *table)
 {
     int i;
-	
-	i = 0;
-    while (i < num_philosophers)
-	{
-        if (pthread_create(&threads[i], NULL, philosopher_routine, &philosophers[i]) != 0)
-		{
-            printf("Error: Failed to create thread for philosopher %d.\n", i + 1);
-            return (1);
+
+    i = 0;
+    while (i < table->num_philosophers)
+    {
+        if (pthread_create(&table->philosophers[i].thread, NULL,
+                           philosopher_routine, &table->philosophers[i]) != 0)
+        {
+            printf("Error: Thread creation failed for philosopher %d\n", i + 1);
+            return (handle_thread_error(table, i));
         }
+        usleep(100);
         i++;
     }
-    return (0);
+    return (1);
 }
 
-int create_monitoring_thread(pthread_t *monitor_thread, t_philosopher *philosophers)
+int create_monitor(t_table *table)
 {
-    if (pthread_create(monitor_thread, NULL, monitor_health, philosophers) != 0)
-	{
-        printf("Error: Failed to create monitoring thread.\n");
-        return (1);
+    if (pthread_create(&table->monitor_thread, NULL, monitor_routine, table) != 0)
+    {
+        printf("Error: Monitor thread creation failed.\n");
+        return (handle_thread_error(table, table->num_philosophers));
     }
-    return (0);
+    return (1);
 }
 
-void join_philosopher_threads(pthread_t *threads, int num_philosophers)
+// static void join_threads(t_table *table)
+// {
+//     int i;
+
+//     i = 0;
+//     while (i < table->num_philosophers)
+//     {
+//         pthread_join(table->philosophers[i].thread, NULL);
+//         i++;
+//     }
+//     pthread_join(table->monitor_thread, NULL);
+// }
+
+int end_simulation(t_table *table)
 {
     int i;
-	
-	i = 0;
-    while (i < num_philosophers)
-	{
-        pthread_join(threads[i], NULL);
+
+    printf("Starting cleanup\n");
+    safe_mutex_lock(&table->write_lock);
+    table->simulation_end = 1;
+    safe_mutex_unlock(&table->write_lock);
+    i = 0;
+    while (i < table->num_philosophers)
+    {
+        pthread_join(table->philosophers[i].thread, NULL);
+        printf("Philosopher %d thread joined\n", i + 1);
         i++;
     }
-}
+    pthread_join(table->monitor_thread, NULL);
+    printf("Monitor thread joined\n");
 
-void join_monitoring_thread(pthread_t monitor_thread)
-{
-    pthread_join(monitor_thread, NULL);
-}
-
-
-int manage_threads(t_philosopher *philosophers, t_shared *shared)
-{
-    pthread_t *threads;
-    pthread_t monitor_thread;
-
-    threads = malloc(sizeof(pthread_t) * shared->num_philosophers);
-    if (!threads)
-	{
-        printf("Error: Failed to allocate memory for threads.\n");
-        return (1);
-    }
-    if (create_philosopher_threads(philosophers, threads, shared->num_philosophers))
-	{
-        free(threads);
-        return (1);
-    }
-    if (create_monitoring_thread(&monitor_thread, philosophers))
-	{
-        free(threads);
-        return (1);
-    }
-    join_philosopher_threads(threads, shared->num_philosophers);
-    join_monitoring_thread(monitor_thread);
-    free(threads);
-    return (0);
+    clean_table(table);
+    printf("Resources cleaned up\n");
+    return (1);
 }

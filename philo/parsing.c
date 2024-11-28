@@ -6,47 +6,69 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/26 19:08:34 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 02:33:08 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int validate_argument(const char *arg, int *value)
+static int is_valid_int(const char *str)
 {
-    *value = ft_atoi(arg);
-    if (*value <= 0)
-        return (1);
-    return (0);
+    int num = ft_atoi(str);
+    return (num >= 0); // Additional checks for overflows can be added if needed
 }
 
-int parse_input(int argc, char **argv, t_shared *shared)
+int parse_arguments(t_table *table, int argc, char **argv)
 {
     if (argc != 5 && argc != 6)
     {
-        printf("Usage: ./philosophers num_philosophers time_to_die time_to_eat time_to_sleep [num_meals_required]\n");
-        return (1);
+        printf("Error: Invalid number of arguments. Expected 5 or 6 arguments.\n");
+        return (0);
     }
-    if (validate_argument(argv[1], &shared->num_philosophers) ||
-        validate_argument(argv[2], &shared->time_to_die) ||
-        validate_argument(argv[3], &shared->time_to_eat) ||
-        validate_argument(argv[4], &shared->time_to_sleep))
+    if (!is_valid_int(argv[1]) || !is_valid_int(argv[2]) || !is_valid_int(argv[3]) || !is_valid_int(argv[4]))
     {
         printf("Error: Arguments must be positive integers.\n");
-        return (1);
+        return (0);
     }
+    table->num_philosophers = ft_atoi(argv[1]);
+    table->time_to_die = ft_atoi(argv[2]);
+    table->time_to_eat = ft_atoi(argv[3]);
+    table->time_to_sleep = ft_atoi(argv[4]);
+    table->must_eat_count = -1;
     if (argc == 6)
     {
-        if (validate_argument(argv[5], &shared->num_meals_required))
+        if (!is_valid_int(argv[5]))
         {
-            printf("Error: num_meals_required must be a positive integer.\n");
-            return (1);
+            printf("Error: The optional argument must be a positive integer.\n");
+            return (0);
         }
+        table->must_eat_count = ft_atoi(argv[5]);
     }
-    else
-        shared->num_meals_required = -1;
+    if (!validate_arguments(table))
+    {
+        printf("Error: Invalid argument values. Ensure all values are within valid ranges.\n");
+        return (0);
+    }
 
-    shared->is_simulation_running = 1;
-    return (0);
+    return (1);
 }
 
+int validate_arguments(t_table *table)
+{
+    if (table->num_philosophers < 1)
+    {
+        printf("Error: Number of philosophers must be at least 1.\n");
+        return (0);
+    }
+    if (table->time_to_die <= 0 || table->time_to_eat <= 0 || table->time_to_sleep <= 0)
+    {
+        printf("Error: Times must be greater than 0.\n");
+        return (0);
+    }
+    if (table->must_eat_count < -1) // -1 indicates no limit on meals
+    {
+        printf("Error: Number of times each philosopher must eat must be -1 or greater.\n");
+        return (0);
+    }
+    return (1);
+}

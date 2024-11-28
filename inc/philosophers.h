@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/26 19:59:26 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 03:11:18 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,79 +19,80 @@
 # include <stdio.h>
 # include <unistd.h>
 
-/* Shared Data */
-typedef struct s_shared
-{
-    int					num_philosophers;
-    int					time_to_die;
-    int					time_to_eat;
-    int					time_to_sleep;
-    int					num_meals_required;
-    int					is_simulation_running;
-    pthread_mutex_t		*forks_mutex;
-    pthread_mutex_t		write_mutex;
-}						t_shared;
-
 /* Philosopher Data */
+
 typedef struct s_philosopher
 {
-    int					id;
-    long				last_meal_time;
-    int					meals_eaten;
-    pthread_mutex_t     meal_mutex;
-    t_shared			*shared;
-}						t_philosopher;
+	int				id;
+	long long		last_meal_time;
+	int				meals_eaten;
+	int				left_fork_id;
+	int				right_fork_id;
+	pthread_t		thread;
+	struct s_table	*table;
+}					t_philosopher;
 
-/* Parsing */
+/* Shared Data */
 
-int						parse_input(int argc, char **argv, t_shared *shared);
-int                     validate_argument(const char *arg, int *value);
+typedef struct s_table
+{
+	t_philosopher	*philosophers;
+	pthread_mutex_t	*forks;
+	pthread_mutex_t	waiter;
+	pthread_mutex_t	write_lock;
+	pthread_t		monitor_thread;
+	long long		start_time;
+	int				num_philosophers;
+	int				time_to_die;
+	int				time_to_eat;
+	int				time_to_sleep;
+	int				must_eat_count;
+	int				simulation_end;
+}					t_table;
 
-/* Initializing */
+/* Cleaning */
+void				clean_mutexes(t_table *table);
+void				clean_table(t_table *table);
+int					cleanup_mutexes(t_table *table, int count);
 
-t_philosopher           *setup_simulation(t_shared *shared);
-t_philosopher           *initialize_philosophers(t_shared *shared);
-pthread_mutex_t         *initialize_fork_mutexes(int num_philosophers);
-int                     initialize_shared_resources(t_shared *shared);
-int                     initialize_write_mutex(pthread_mutex_t *write_mutex);
-
-
-/* Routine */
-
-void					think(t_philosopher *philo);
-int                     take_forks(t_philosopher *philo);
-void					eat(t_philosopher *philo);
-void					release_forks(t_philosopher *philo);
-void					sleep_and_rest(t_philosopher *philo);
-void                    single_philosopher_routine(t_philosopher *philo);
-void                    *general_philosopher_routine(t_philosopher *philo);
-void					*philosopher_routine(void *arg);
+/* Initialization */
+int					init_table(t_table *table, int argc, char **argv);
+void				init_philosophers(t_table *table);
+int					init_mutexes(t_table *table);
 
 /* Monitoring */
+void				*monitor_routine(void *arg);
+int					get_simulation_status(t_table *table);
+int					monitor_status(t_table *table, int philo_index);
 
-void					*monitor_health(void *arg);
-int                     check_all_meals(t_philosopher *philosophers, t_shared *shared);
-void                    check_starvation(t_philosopher *philosophers, t_shared *shared);
+/* Parsing */
+int					parse_arguments(t_table *table, int argc, char **argv);
+int					validate_arguments(t_table *table);
 
-/* Thread Management */
+/* Routine */
+void				*philosopher_routine(void *arg);
+int					think(t_philosopher *philo);
+int					eat(t_philosopher *philo);
+int					sleep_philosopher(t_philosopher *philo);
 
-int						manage_threads(t_philosopher *philosophers, t_shared *shared);
-int						create_philosopher_threads(t_philosopher *philosophers, pthread_t *threads, int num_philosophers);
-int						create_monitoring_thread(pthread_t *monitor_thread, t_philosopher *philosophers);
-void					join_philosopher_threads(pthread_t *threads, int num_philosophers);
-void					join_monitoring_thread(pthread_t monitor_thread);
-
-/* Cleanup */
-
-void					cleanup_simulation(t_shared *shared, t_philosopher *philosophers);
-void					destroy_fork_mutexes(pthread_mutex_t *forks_mutex, int num_philosophers);
-void					destroy_write_mutex(pthread_mutex_t *write_mutex);
-void					cleanup_shared_resources(t_shared *shared);
+/* Threads */
+int					create_philosophers(t_table *table);
+int					create_monitor(t_table *table);
+int					end_simulation(t_table *table);
 
 /* Utilities */
+long long			get_current_time(void);
+void				print_status(t_philosopher *philo, const char *status);
+void				smart_sleep(long long duration, t_table *table);
 
-int						ft_atoi(const char *str);
-long					get_current_time(void);
-void					log_action(t_philosopher *philo, const char *action);
+/* Mutex Safety: Provides error-checked mutex operations */
+int					safe_mutex_lock(pthread_mutex_t *mutex);
+int					safe_mutex_unlock(pthread_mutex_t *mutex);
+
+/* Argument Parsing Utility */
+int					ft_atoi(const char *str);
+
+/* Single Philosopher Case */
+void				*handle_single_philosopher(t_philosopher *philo);
 
 #endif
