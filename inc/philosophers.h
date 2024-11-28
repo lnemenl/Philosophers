@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 00:47:17 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 01:33:16 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,10 @@ void free_resources(t_thread_data *data);
 void clean_up(t_thread_data *data);
 
 //initialization functions
-int init_shared_data(t_shared *shared, char **argv);
-int init_forks(t_shared *shared);
 int initialize_simulation(t_shared *shared, int argc, char **argv);
+int init_forks(t_shared *shared);
+int init_shared_data(t_shared *shared, char **argv);
+int init_log_mutex(t_shared *shared);
 int allocate_thread_data(t_thread_data *data, t_shared *shared);
 
 //monitoring functions
@@ -73,6 +74,7 @@ void *monitor_routine(void *arg);
 int is_numeric(const char *str);
 int validate_arguments(t_shared *shared);
 int parse_arguments(int argc, char **argv, t_shared *shared);
+int parse_shared_parameters(t_shared *shared, char **argv);
 
 //routine functions
 int take_forks(t_philosopher *philosopher);

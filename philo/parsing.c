@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 00:49:00 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 01:35:31 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,33 @@ int validate_arguments(t_shared *shared)
         return (0);
     if (shared->meals_required < -1)
         return (0);
+    return (1);
+}
+
+int parse_shared_parameters(t_shared *shared, char **argv)
+{
+    int result;
+
+    if (!safe_atoi(argv[1], &result) || result <= 0)
+        return (0);
+    shared->num_philosophers = result;
+    if (!safe_atoi(argv[2], &result) || result <= 0)
+        return (0);
+    shared->time_to_die = result;
+    if (!safe_atoi(argv[3], &result) || result <= 0)
+        return (0);
+    shared->time_to_eat = result;
+    if (!safe_atoi(argv[4], &result) || result <= 0)
+        return (0);
+    shared->time_to_sleep = result;
+    if (argv[5])
+    {
+        if (!safe_atoi(argv[5], &result) || result < 0)
+            return (0);
+        shared->meals_required = result;
+    }
+    else
+        shared->meals_required = -1;
     return (1);
 }
 

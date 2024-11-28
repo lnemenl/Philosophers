@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 00:50:44 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 00:58:02 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,12 @@ int launch_threads(t_thread_data *data)
     i = 0;
     if (!launch_philosopher_threads(data->shared, data->threads, data->philosophers))
     {
-        print_error("Error: Failed to create philosopher threads.\n");
+        printf("Error: Failed to create philosopher threads.\n");
         return (0);
     }
     if (!launch_monitor_thread(&data->monitor_thread, data->shared))
     {
-        print_error("Error: Failed to create monitor thread.\n");
+        printf("Error: Failed to create monitor thread.\n");
         while (i < data->shared->num_philosophers)
         {
             pthread_detach(data->threads[i]);
