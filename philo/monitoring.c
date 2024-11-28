@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 00:23:17 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 00:48:32 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,9 @@ int check_philosopher_death(t_philosopher *philosopher)
 int check_all_meals(t_shared *shared, t_philosopher *philosophers)
 {
 	int i;
-	int all_meals_met = 1;
+	int all_meals_met;
 
+	all_meals_met = 1;
 	if (shared->meals_required == -1)
 		return (0);
 	i = 0;

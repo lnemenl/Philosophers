@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 23:12:52 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 00:50:44 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,4 +59,3 @@ int launch_threads(t_thread_data *data)
     }
     return (1);
 }
-

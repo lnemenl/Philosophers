@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 22:09:48 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 00:47:17 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,5 +51,46 @@ typedef struct s_thread_data
     t_philosopher       *philosophers;
 }                       t_thread_data;
 
+
+//cleanup functions
+void join_threads(t_thread_data *data);
+void destroy_mutexes(t_shared *shared);
+void free_resources(t_thread_data *data);
+void clean_up(t_thread_data *data);
+
+//initialization functions
+int init_shared_data(t_shared *shared, char **argv);
+int init_forks(t_shared *shared);
+int initialize_simulation(t_shared *shared, int argc, char **argv);
+int allocate_thread_data(t_thread_data *data, t_shared *shared);
+
+//monitoring functions
+int check_philosopher_death(t_philosopher *philosopher);
+int check_all_meals(t_shared *shared, t_philosopher *philosophers);
+void *monitor_routine(void *arg);
+
+//parsing functions
+int is_numeric(const char *str);
+int validate_arguments(t_shared *shared);
+int parse_arguments(int argc, char **argv, t_shared *shared);
+
+//routine functions
+int take_forks(t_philosopher *philosopher);
+void put_forks(t_philosopher *philosopher);
+int eat(t_philosopher *philosopher);
+void *philosopher_routine(void *arg);
+
+//thread management functions
+int launch_philosopher_threads(t_shared *shared, pthread_t *threads, t_philosopher *philosophers);
+int launch_monitor_thread(pthread_t *monitor_thread, t_shared *shared);
+int launch_threads(t_thread_data *data);
+
+//utilities functions
+long long get_current_time_ms(void);
+void log_action(t_philosopher *philosopher, const char *action);
+void smart_sleep(int duration, t_shared *shared);
+int safe_mutex_lock(pthread_mutex_t *mutex);
+int safe_mutex_unlock(pthread_mutex_t *mutex);
+int	safe_atoi(const char *str, int *result);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 21:20:22 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 00:49:00 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 int is_numeric(const char *str)
 {
-    int i = 0;
-
+    int i;
+    
+    i = 0;
     if (!str || str[0] == '\0')
         return (0);
     if (str[i] == '+' || str[i] == '-')

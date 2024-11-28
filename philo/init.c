@@ -6,11 +6,27 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 21:38:19 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 00:46:56 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
+
+int allocate_thread_data(t_thread_data *data, t_shared *shared)
+{
+    data->threads = malloc(sizeof(pthread_t) * shared->num_philosophers);
+    if (!data->threads)
+        return (0);
+    data->philosophers = malloc(sizeof(t_philosopher) * shared->num_philosophers);
+    if (!data->philosophers)
+    {
+        free(data->threads);
+        return (0);
+    }
+    data->shared = shared;
+    return (1);
+}
+
 
 int init_shared_data(t_shared *shared, char **argv)
 {
@@ -55,19 +71,19 @@ int initialize_simulation(t_shared *shared, int argc, char **argv)
 {
     if (!parse_arguments(argc, argv, shared))
     {
-        print_error("Error: Invalid arguments.\n");
+        printf("Error: Invalid arguments.\n");
         return (0);
     }
     if (!init_shared_data(shared, argv))
     {
-        print_error("Error: Failed to initialize shared data.\n");
+        printf("Error: Failed to initialize shared data.\n");
         return (0);
     }
     if (!init_forks(shared))
     {
         free(shared->forks);
         pthread_mutex_destroy(&shared->log_lock);
-        print_error("Error: Failed to initialize forks.\n");
+        printf("Error: Failed to initialize forks.\n");
         return (0);
     }
     return (1);
