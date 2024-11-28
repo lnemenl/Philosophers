@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 01:35:31 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 01:56:11 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,16 @@ int is_numeric(const char *str)
 
 int validate_arguments(t_shared *shared)
 {
-    if (shared->num_philosophers <= 0 || shared->time_to_die <= 0 ||
-        shared->time_to_eat <= 0 || shared->time_to_sleep <= 0)
+    if (shared->num_philosophers <= 0 || shared->time_to_die <= 0 || shared->time_to_eat <= 0 || shared->time_to_sleep <= 0)
+    {
+        printf("Error: All parameters must be positive integers.\n");
         return (0);
+    }
     if (shared->meals_required < -1)
+    {
+        printf("Error: Meals required must be -1 or a positive integer.\n");
         return (0);
+    }
     return (1);
 }
 

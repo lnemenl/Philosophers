@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 00:58:02 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 01:53:22 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int launch_philosopher_threads(t_shared *shared, pthread_t *threads, t_philosoph
         {
             while (--i >= 0)
                 pthread_detach(threads[i]);
+            printf("Error: Failed to create philosopher thread %d\n", i + 1);
             return (0);
         }
         i++;

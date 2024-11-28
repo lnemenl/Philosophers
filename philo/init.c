@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 01:44:01 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 01:58:22 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,8 +82,15 @@ int initialize_simulation(t_shared *shared, int argc, char **argv)
     }
     if (!init_forks(shared))
     {
+        free(shared->forks);
         pthread_mutex_destroy(&shared->log_lock);
         printf("Error: Failed to initialize forks.\n");
+        return (0);
+    }
+    if (shared->num_philosophers == 1)
+    {
+        printf("0 1 has taken a fork\n");
+        printf("%d 1 died\n", shared->time_to_die);
         return (0);
     }
     return (1);
