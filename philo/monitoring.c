@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 03:47:56 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 05:20:51 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,25 +22,24 @@ int get_simulation_status(t_table *table)
     return (status);
 }
 
-static int has_philosopher_died(t_philosopher *philo, t_table *table)
+static int check_philosopher_died(t_table *table, int philo_index)
 {
-    long long current_time;
+    long long current_time = get_current_time();
 
-    current_time = get_current_time();
-    if (current_time - philo->last_meal_time > table->time_to_die)
+    if (current_time - table->philosophers[philo_index].last_meal_time > table->time_to_die)
     {
-        print_status(philo, "died");
+        print_status(&table->philosophers[philo_index], "died");
         table->simulation_end = 1;
         return (1);
     }
     return (0);
 }
 
-static int all_philosophers_satisfied(t_table *table)
+static int check_all_ate_enough(t_table *table)
 {
     int i;
 
-    if (table->must_eat_count == -1)
+    if (table->must_eat_count <= 0)
         return (0);
 
     i = 0;
@@ -50,46 +49,37 @@ static int all_philosophers_satisfied(t_table *table)
             return (0);
         i++;
     }
+    table->simulation_end = 1;
     return (1);
 }
 
 int monitor_status(t_table *table, int philo_index)
 {
+    int status;
+    
+    status = 0;
     safe_mutex_lock(&table->write_lock);
-    if (has_philosopher_died(&table->philosophers[philo_index], table))
-    {
-        safe_mutex_unlock(&table->write_lock);
-        return (1);
-    }
-    if (all_philosophers_satisfied(table))
-    {
-        table->simulation_end = 1;
-        safe_mutex_unlock(&table->write_lock);
-        return (1);
-    }
+    if (check_philosopher_died(table, philo_index))
+        status = 1;
+    else if (check_all_ate_enough(table))
+        status = 1;
     safe_mutex_unlock(&table->write_lock);
-    return (0);
+    return (status);
 }
 
 void *monitor_routine(void *arg)
 {
     t_table *table = (t_table *)arg;
-    int i;
 
     while (!get_simulation_status(table))
     {
-        i = 0;
-        while (i < table->num_philosophers)
+        for (int i = 0; i < table->num_philosophers; i++)
         {
             if (monitor_status(table, i))
-            {
-                printf("Monitor detected termination condition\n");
                 return (NULL);
-            }
-            i++;
         }
-        usleep(500); // More frequent checks
+        usleep(200);
     }
-    printf("Monitor thread exiting\n");
+    printf("Monitor thread exiting.\n");
     return (NULL);
 }

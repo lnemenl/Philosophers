@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 03:37:44 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 05:18:36 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,43 +26,26 @@ long long get_current_time(void)
 
 void print_status(t_philosopher *philo, const char *status)
 {
-    char message[256];
     long long timestamp;
 
     safe_mutex_lock(&philo->table->write_lock);
-
     if (!philo->table->simulation_end)
     {
         timestamp = get_current_time() - philo->table->start_time;
-        snprintf(message, sizeof(message), "%lld %d %s\n", timestamp, philo->id, status);
-        safe_mutex_unlock(&philo->table->write_lock);
-        printf("%s", message);
+        printf("%lld %d %s\n", timestamp, philo->id, status);
     }
-    else
-    {
-        safe_mutex_unlock(&philo->table->write_lock);
-    }
+    safe_mutex_unlock(&philo->table->write_lock);
 }
 
 void smart_sleep(long long duration, t_table *table)
 {
     long long start = get_current_time();
-    long long current;
 
-    while (1)
+    while (get_current_time() - start < duration)
     {
-        safe_mutex_lock(&table->write_lock);
-        if (table->simulation_end)
-        {
-            safe_mutex_unlock(&table->write_lock);
-            printf("Smart sleep interrupted due to simulation end\n");
+        if (get_simulation_status(table))
             break;
-        }
-        safe_mutex_unlock(&table->write_lock);
-        current = get_current_time();
-        if (current - start >= duration)
-            break;
-        usleep(20);
+        usleep(50);
     }
 }
 

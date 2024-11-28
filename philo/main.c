@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:08:49 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/28 02:30:15 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/28 05:13:05 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,11 @@ int main(int argc, char **argv)
     t_table table;
 
     if (argc != 5 && argc != 6)
-    {
-        printf("Usage: ./philo number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
-        return (1);
-    }
+        return (printf("Usage: ./philo num_philos time_die time_eat time_sleep [must_eat]\n"), 1);
     if (!initialize_simulation(&table, argc, argv))
         return (1);
-    table.start_time = get_current_time();
     if (!create_monitor(&table))
     {
-        printf("Error: Failed to create monitor thread. Cleaning up...\n");
         end_simulation(&table);
         return (1);
     }
