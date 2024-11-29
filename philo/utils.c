@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 03:08:58 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 05:09:45 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ void log_action(t_philosopher *philosopher, const char *action)
     pthread_mutex_unlock(&shared->log_lock);
 }
 
-
 void smart_sleep(int duration, t_shared *shared)
 {
     long long start_time;
@@ -47,22 +46,28 @@ void smart_sleep(int duration, t_shared *shared)
         usleep(50);
 }
 
-int safe_mutex_lock(pthread_mutex_t *mutex)
+int	safe_atoi(const char *str, int *result)
 {
-    if (pthread_mutex_lock(mutex) != 0)
-    {
-        printf("Error: Mutex lock failed\n");
-        return (0);
-    }
-    return (1);
-}
+	long long	num;
+	int			sign;
+	int			i;
 
-int safe_mutex_unlock(pthread_mutex_t *mutex)
-{
-    if (pthread_mutex_unlock(mutex) != 0)
-    {
-        printf("Error: Mutex unlock failed\n");
-        return (0);
-    }
-    return (1);
+	num = 0;
+	sign = 1;
+	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
+	while (str[i])
+	{
+		num = num * 10 + (str[i] - '0');
+		if ((sign == 1 && num > INT_MAX) || (sign == -1 && -num < INT_MIN))
+			return (0);
+		i++;
+	}
+	*result = (int)(num * sign);
+	return (1);
 }

@@ -6,7 +6,7 @@
 #    By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 18:06:36 by rkhakimu          #+#    #+#              #
-#    Updated: 2024/11/26 18:00:51 by rkhakimu         ###   ########.fr        #
+#    Updated: 2024/11/29 05:07:15 by rkhakimu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,6 @@ SRC_DIR				= philo
 INC_DIR				= inc
 
 SRC_FILES			= $(SRC_DIR)/cleanup.c \
-					  $(SRC_DIR)/ft_atoi.c \
 					  $(SRC_DIR)/main.c \
 					  $(SRC_DIR)/monitoring.c \
 					  $(SRC_DIR)/parsing.c \
