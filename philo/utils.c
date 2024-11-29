@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 00:50:52 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 03:08:58 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,16 @@ long long get_current_time_ms(void)
 void log_action(t_philosopher *philosopher, const char *action)
 {
     t_shared *shared;
+    long long timestamp;
 
     shared = philosopher->shared_data;
+    timestamp = get_current_time_ms();
     pthread_mutex_lock(&shared->log_lock);
-    printf("%lld %d %s\n", get_current_time_ms(), philosopher->id, action);
+    if (!shared->simulation_end)
+        printf("%lld %d %s\n", timestamp, philosopher->id, action);
     pthread_mutex_unlock(&shared->log_lock);
 }
+
 
 void smart_sleep(int duration, t_shared *shared)
 {

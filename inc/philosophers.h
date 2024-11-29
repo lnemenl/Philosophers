@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 01:33:16 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 03:29:00 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,17 +57,23 @@ void join_threads(t_thread_data *data);
 void destroy_mutexes(t_shared *shared);
 void free_resources(t_thread_data *data);
 void clean_up(t_thread_data *data);
+void destroy_forks(t_shared *shared);
+void handle_initialization_failure(t_thread_data *data, int thread_created_count);
+void cleanup_partial_thread_data(t_thread_data *data);
 
 //initialization functions
-int initialize_simulation(t_shared *shared, int argc, char **argv);
-int init_forks(t_shared *shared);
-int init_shared_data(t_shared *shared, char **argv);
+int allocate_memory(t_thread_data *data, t_shared *shared);
+void initialize_philosopher(t_philosopher *philosopher, int id, t_shared *shared);
 int init_log_mutex(t_shared *shared);
+int init_shared_data(t_shared *shared, char **argv);
+int init_forks(t_shared *shared);
 int allocate_thread_data(t_thread_data *data, t_shared *shared);
+int initialize_simulation(t_shared *shared, int argc, char **argv);
 
 //monitoring functions
 int check_philosopher_death(t_philosopher *philosopher);
 int check_all_meals(t_shared *shared, t_philosopher *philosophers);
+int check_termination_conditions(t_thread_data *data);
 void *monitor_routine(void *arg);
 
 //parsing functions
@@ -83,8 +89,8 @@ int eat(t_philosopher *philosopher);
 void *philosopher_routine(void *arg);
 
 //thread management functions
-int launch_philosopher_threads(t_shared *shared, pthread_t *threads, t_philosopher *philosophers);
-int launch_monitor_thread(pthread_t *monitor_thread, t_shared *shared);
+int launch_philosopher_threads(t_thread_data *data);
+int launch_monitor_thread(t_thread_data *data);
 int launch_threads(t_thread_data *data);
 
 //utilities functions

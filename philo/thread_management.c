@@ -6,24 +6,24 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 01:53:22 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 03:05:31 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int launch_philosopher_threads(t_shared *shared, pthread_t *threads, t_philosopher *philosophers)
+int launch_philosopher_threads(t_thread_data *data)
 {
     int i;
 
     i = 0;
-    while (i < shared->num_philosophers)
+    while (i < data->shared->num_philosophers)
     {
-        if (pthread_create(&threads[i], NULL, philosopher_routine, (void *)&philosophers[i]) != 0)
+        if (pthread_create(&data->threads[i], NULL, philosopher_routine, (void *)&data->philosophers[i]) != 0)
         {
+            printf("Error: Failed to create philosopher thread %d.\n", i + 1);
             while (--i >= 0)
-                pthread_detach(threads[i]);
-            printf("Error: Failed to create philosopher thread %d\n", i + 1);
+                pthread_join(data->threads[i], NULL);
             return (0);
         }
         i++;
@@ -31,31 +31,36 @@ int launch_philosopher_threads(t_shared *shared, pthread_t *threads, t_philosoph
     return (1);
 }
 
-int launch_monitor_thread(pthread_t *monitor_thread, t_shared *shared)
+int launch_monitor_thread(t_thread_data *data)
 {
-    if (pthread_create(monitor_thread, NULL, monitor_routine, (void *)shared) != 0)
+    if (pthread_create(&data->monitor_thread, NULL, monitor_routine, (void *)data) != 0)
+    {
+        printf("Error: Failed to create monitor thread.\n");
         return (0);
+    }
     return (1);
 }
 
 int launch_threads(t_thread_data *data)
 {
-    int i;
-    
-    i = 0;
-    if (!launch_philosopher_threads(data->shared, data->threads, data->philosophers))
+    int thread_created_count;
+
+    thread_created_count = 0;
+    while (thread_created_count < data->shared->num_philosophers)
     {
-        printf("Error: Failed to create philosopher threads.\n");
-        return (0);
+        if (pthread_create(&data->threads[thread_created_count], NULL,
+                           philosopher_routine, (void *)&data->philosophers[thread_created_count]) != 0)
+        {
+            printf("Error: Failed to create philosopher thread %d.\n", thread_created_count + 1);
+            handle_initialization_failure(data, thread_created_count);
+            return (0);
+        }
+        thread_created_count++;
     }
-    if (!launch_monitor_thread(&data->monitor_thread, data->shared))
+    if (pthread_create(&data->monitor_thread, NULL, monitor_routine, (void *)data) != 0)
     {
         printf("Error: Failed to create monitor thread.\n");
-        while (i < data->shared->num_philosophers)
-        {
-            pthread_detach(data->threads[i]);
-            i++;
-        }
+        handle_initialization_failure(data, thread_created_count);
         return (0);
     }
     return (1);
