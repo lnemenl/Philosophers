@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 03:29:00 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/11/29 08:11:16 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ int eat(t_philosopher *philosopher);
 void *philosopher_routine(void *arg);
 
 //thread management functions
-int launch_philosopher_threads(t_thread_data *data);
-int launch_monitor_thread(t_thread_data *data);
 int launch_threads(t_thread_data *data);
 
 //utilities functions
