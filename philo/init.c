@@ -6,13 +6,13 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 03:14:19 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/02 14:20:59 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int allocate_memory(t_thread_data *data, t_shared *shared)
+int allocate_memory(t_thread_data *data, t_shared *shared, int *cleanup_flags)
 {
     data->threads = malloc(sizeof(pthread_t) * shared->num_philosophers);
     if (!data->threads)
@@ -20,9 +20,11 @@ int allocate_memory(t_thread_data *data, t_shared *shared)
     data->philosophers = malloc(sizeof(t_philosopher) * shared->num_philosophers);
     if (!data->philosophers)
     {
-        cleanup_partial_thread_data(data);
+        *cleanup_flags |= MEMORY_ALLOCATED;
+        clean_up_simulation(data, shared, *cleanup_flags);
         return (0);
     }
+    *cleanup_flags |= MEMORY_ALLOCATED;
     return (1);
 }
 
@@ -59,30 +61,32 @@ int init_shared_data(t_shared *shared, char **argv)
     return (1);
 }
 
-int init_forks(t_shared *shared)
+int init_forks(t_shared *shared, int *cleanup_flags)
 {
     int i;
-
+    
     i = 0;
     while (i < shared->num_philosophers)
     {
         if (pthread_mutex_init(&shared->forks[i], NULL) != 0)
         {
-            while (--i >= 0)
-                pthread_mutex_destroy(&shared->forks[i]);
+            *cleanup_flags |= MUTEXES_INITIALIZED;
+            clean_up_simulation(NULL, shared, *cleanup_flags);
             return (0);
         }
         i++;
     }
+    *cleanup_flags |= MUTEXES_INITIALIZED;
     return (1);
 }
 
-int allocate_thread_data(t_thread_data *data, t_shared *shared)
+int allocate_thread_data(t_thread_data *data, t_shared *shared, int *cleanup_flags)
 {
     int i;
 
-    if (!allocate_memory(data, shared))
+    if (!allocate_memory(data, shared, cleanup_flags))
         return (0);
+    *cleanup_flags |= MEMORY_ALLOCATED;
     i = 0;
     while (i < shared->num_philosophers)
     {
@@ -93,7 +97,7 @@ int allocate_thread_data(t_thread_data *data, t_shared *shared)
     return (1);
 }
 
-int initialize_simulation(t_shared *shared, int argc, char **argv)
+int initialize_simulation(t_shared *shared, int argc, char **argv, int *cleanup_flags)
 {
     if (!parse_arguments(argc, argv, shared))
     {
@@ -102,24 +106,24 @@ int initialize_simulation(t_shared *shared, int argc, char **argv)
     }
     if (!init_shared_data(shared, argv))
     {
-        printf("Error: Failed to initialize shared data.\n");
+        *cleanup_flags |= MEMORY_ALLOCATED;
+        clean_up_simulation(NULL, shared, *cleanup_flags);
         return (0);
     }
-    if (!init_forks(shared))
+    *cleanup_flags |= MEMORY_ALLOCATED;
+    if (!init_forks(shared, cleanup_flags))
     {
-        printf("Error: Failed to initialize forks.\n");
-        destroy_forks(shared);
-        pthread_mutex_destroy(&shared->log_lock);
+        clean_up_simulation(NULL, shared, *cleanup_flags);
         return (0);
     }
+    *cleanup_flags |= MUTEXES_INITIALIZED;
     if (shared->num_philosophers == 1)
     {
         printf("0 1 has taken a fork\n");
-        printf("%lld 1 died\n", (long long)shared->time_to_die);
-        destroy_forks(shared);
-        pthread_mutex_destroy(&shared->log_lock);
+        usleep(shared->time_to_die * 1000);
+        printf("%lld 1 died\n", get_current_time_ms());
+        clean_up_simulation(NULL, shared, *cleanup_flags);
         return (0);
     }
     return (1);
 }
-

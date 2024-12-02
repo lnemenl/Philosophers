@@ -6,12 +6,16 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 08:11:16 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/02 13:26:34 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
+
+#define MEMORY_ALLOCATED    1 // 0001
+#define MUTEXES_INITIALIZED 2 // 0010
+#define THREADS_INITIALIZED 4 // 0100
 
 # include <pthread.h>
 # include <sys/time.h>
@@ -51,24 +55,18 @@ typedef struct s_thread_data
     t_philosopher       *philosophers;
 }                       t_thread_data;
 
+// cleaning
 
-//cleanup functions
-void join_threads(t_thread_data *data);
-void destroy_mutexes(t_shared *shared);
-void free_resources(t_thread_data *data);
-void clean_up(t_thread_data *data);
-void destroy_forks(t_shared *shared);
-void handle_initialization_failure(t_thread_data *data, int thread_created_count);
-void cleanup_partial_thread_data(t_thread_data *data);
+void clean_up_simulation(t_thread_data *data, t_shared *shared, int cleanup_flags);
 
 //initialization functions
-int allocate_memory(t_thread_data *data, t_shared *shared);
+int allocate_memory(t_thread_data *data, t_shared *shared, int *cleanup_flags);
 void initialize_philosopher(t_philosopher *philosopher, int id, t_shared *shared);
 int init_log_mutex(t_shared *shared);
 int init_shared_data(t_shared *shared, char **argv);
-int init_forks(t_shared *shared);
-int allocate_thread_data(t_thread_data *data, t_shared *shared);
-int initialize_simulation(t_shared *shared, int argc, char **argv);
+int init_forks(t_shared *shared, int *cleanup_flags);
+int allocate_thread_data(t_thread_data *data, t_shared *shared, int *cleanup_flags);
+int initialize_simulation(t_shared *shared, int argc, char **argv, int *cleanup_flags);
 
 //monitoring functions
 int check_philosopher_death(t_philosopher *philosopher);
@@ -89,14 +87,12 @@ int eat(t_philosopher *philosopher);
 void *philosopher_routine(void *arg);
 
 //thread management functions
-int launch_threads(t_thread_data *data);
+int launch_threads(t_thread_data *data, int *cleanup_flags);
 
 //utilities functions
 long long get_current_time_ms(void);
 void log_action(t_philosopher *philosopher, const char *action);
 void smart_sleep(int duration, t_shared *shared);
-int safe_mutex_lock(pthread_mutex_t *mutex);
-int safe_mutex_unlock(pthread_mutex_t *mutex);
 int	safe_atoi(const char *str, int *result);
 
 #endif

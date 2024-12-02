@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/02 07:46:29 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/02 10:58:20 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,6 @@ int validate_arguments(t_shared *shared)
     }
     if (shared->meals_required < -1)
         return (0);
-    // if (shared->time_to_die <= shared->time_to_eat + shared->time_to_sleep)
-    // {
-    //     printf("Error: time_to_die must be greater than the sum of time_to_eat and time_to_sleep.\n");
-    //     return (0);
-    // }
     return (1);
 }
 
