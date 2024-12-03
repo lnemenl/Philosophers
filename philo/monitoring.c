@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:24:19 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:21:16 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int check_philosopher_death(t_philosopher *philosopher)
         if (!is_simulation_end(shared))
             printf("%lld %d died\n", current_time, philosopher->id);
         pthread_mutex_unlock(&shared->log_lock);
+        pthread_mutex_unlock(&philosopher->meal_lock);
         return (1);
     }
     pthread_mutex_unlock(&philosopher->meal_lock);

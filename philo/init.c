@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:47:41 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:12:38 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void initialize_philosopher(t_philosopher *philosopher, int id, t_shared *shared
     philosopher->left_fork = &shared->forks[id - 1];
     philosopher->right_fork = &shared->forks[id % shared->num_philosophers];
     philosopher->shared_data = shared;
+    if (pthread_mutex_init(&philosopher->meal_lock, NULL) != 0)
+        set_simulation_end(shared, 1);
 }
 
 int init_log_mutex(t_shared *shared)

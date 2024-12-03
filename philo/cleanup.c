@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 10:37:31 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:47:03 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:23:54 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,15 @@ void clean_up_simulation(t_thread_data *data, t_shared *shared, int cleanup_flag
             while (i < shared->num_philosophers)
             {
                 pthread_mutex_destroy(&shared->forks[i]);
+                i++;
+            }
+        }
+        if (data && data->philosophers)
+        {
+            i = 0;
+            while (i < shared->num_philosophers)
+            {
+                pthread_mutex_destroy(&data->philosophers[i].meal_lock);
                 i++;
             }
         }
