@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:00:56 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:24:19 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ int check_philosopher_death(t_philosopher *philosopher)
 
     shared = philosopher->shared_data;
     current_time = get_current_time_ms();
+    pthread_mutex_lock(&philosopher->meal_lock);
     if (current_time - philosopher->last_meal_time > shared->time_to_die)
     {
         pthread_mutex_lock(&shared->log_lock);
@@ -27,6 +28,7 @@ int check_philosopher_death(t_philosopher *philosopher)
         pthread_mutex_unlock(&shared->log_lock);
         return (1);
     }
+    pthread_mutex_unlock(&philosopher->meal_lock);
     return (0);
 }
 
@@ -40,12 +42,18 @@ int check_all_meals(t_shared *shared, t_philosopher *philosophers)
     i = 0;
     while (i < shared->num_philosophers)
     {
+        pthread_mutex_lock(&philosophers[i].meal_lock);
         if (philosophers[i].meals_eaten < shared->meals_required)
+        {
+            pthread_mutex_unlock(&philosophers[i].meal_lock);
             return (0);
+        }
+        pthread_mutex_unlock(&philosophers[i].meal_lock);
         i++;
     }
     return (1);
 }
+
 
 int check_termination_conditions(t_thread_data *data)
 {

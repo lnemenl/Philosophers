@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 09:27:44 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:16:54 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ typedef struct s_philosopher
 	int					id;							// Philosopher ID
 	int					meals_eaten;				// Count of meals eaten
 	long long			last_meal_time;				// Timestamp of the last meal
-	pthread_mutex_t		*left_fork;					// Pointer to the left fork mutex
+	pthread_mutex_t     meal_lock;
+    pthread_mutex_t		*left_fork;					// Pointer to the left fork mutex
 	pthread_mutex_t		*right_fork;				// Pointer to the right fork mutex
 	struct s_shared		*shared_data;				// Pointer to shared data
 }						t_philosopher;

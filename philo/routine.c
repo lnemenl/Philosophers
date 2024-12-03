@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:02:44 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:20:42 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,12 @@ int eat(t_philosopher *philosopher)
 	if (is_simulation_end(shared))
 		return (0);
 	log_action(philosopher, "is eating");
+	pthread_mutex_lock(&philosopher->meal_lock);
 	philosopher->last_meal_time = get_current_time_ms();
+	pthread_mutex_unlock(&philosopher->meal_lock);
+	pthread_mutex_lock(&philosopher->meal_lock);
 	philosopher->meals_eaten++;
+	pthread_mutex_unlock(&philosopher->meal_lock);
 	smart_sleep(shared->time_to_eat, shared);
 	if (is_simulation_end(shared))
 		return (0);
