@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 09:29:30 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:47:41 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int init_shared_data(t_shared *shared, char **argv)
     if (!init_log_mutex(shared))
     {
         free(shared->forks);
+        pthread_mutex_destroy(&shared->simulation_end_lock);
         return (0);
     }
     return (1);

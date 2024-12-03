@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:20:42 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 11:17:48 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,37 @@
 
 int take_forks(t_philosopher *philosopher)
 {
-	t_shared *shared;
-	shared = philosopher->shared_data;
-	if (is_simulation_end(shared))
-		return (0);
-	pthread_mutex_lock(philosopher->left_fork);
-	log_action(philosopher, "has taken a fork");
-	if (is_simulation_end(shared))
-	{
-		pthread_mutex_unlock(philosopher->left_fork);
-		return (0);
-	}
-	pthread_mutex_lock(philosopher->right_fork);
-	log_action(philosopher, "has taken a fork");
-	if (is_simulation_end(shared))
-	{
-		put_forks(philosopher);
-		return (0);
-	}
-	return (1);
+    t_shared *shared;
+    pthread_mutex_t *first_fork;
+    pthread_mutex_t *second_fork;
+
+    shared = philosopher->shared_data;
+    if (philosopher->left_fork < philosopher->right_fork)
+    {
+        first_fork = philosopher->left_fork;
+        second_fork = philosopher->right_fork;
+    }
+    else
+    {
+        first_fork = philosopher->right_fork;
+        second_fork = philosopher->left_fork;
+    }
+    pthread_mutex_lock(first_fork);
+    log_action(philosopher, "has taken a fork");
+    if (is_simulation_end(shared))
+    {
+        pthread_mutex_unlock(first_fork);
+        return (0);
+    }
+    pthread_mutex_lock(second_fork);
+    log_action(philosopher, "has taken a fork");
+    if (is_simulation_end(shared))
+    {
+        pthread_mutex_unlock(second_fork);
+        pthread_mutex_unlock(first_fork);
+        return (0);
+    }
+    return (1);
 }
 
 void put_forks(t_philosopher *philosopher)
