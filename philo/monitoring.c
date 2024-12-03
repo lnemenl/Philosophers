@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/11/29 08:12:14 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:00:56 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int check_philosopher_death(t_philosopher *philosopher)
     if (current_time - philosopher->last_meal_time > shared->time_to_die)
     {
         pthread_mutex_lock(&shared->log_lock);
-        if (!shared->simulation_end)
+        if (!is_simulation_end(shared))
             printf("%lld %d died\n", current_time, philosopher->id);
         pthread_mutex_unlock(&shared->log_lock);
         return (1);
@@ -59,7 +59,7 @@ int check_termination_conditions(t_thread_data *data)
         if (check_philosopher_death(&data->philosophers[i]))
         {
             pthread_mutex_lock(&shared->log_lock);
-            shared->simulation_end = 1;
+            set_simulation_end(shared, 1);
             pthread_mutex_unlock(&shared->log_lock);
             return (1);
         }
@@ -68,7 +68,7 @@ int check_termination_conditions(t_thread_data *data)
     if (check_all_meals(shared, data->philosophers))
     {
         pthread_mutex_lock(&shared->log_lock);
-        shared->simulation_end = 1;
+        set_simulation_end(shared, 1);
         pthread_mutex_unlock(&shared->log_lock);
         return (1);
     }
@@ -80,13 +80,13 @@ void *monitor_routine(void *arg)
     t_thread_data *data = (t_thread_data *)arg;
     t_shared *shared = data->shared;
 
-    while (!shared->simulation_end)
+    while (!is_simulation_end(shared))
     {
         if (check_termination_conditions(data))
         {
-            pthread_mutex_lock(&shared->log_lock);
-            shared->simulation_end = 1;
-            pthread_mutex_unlock(&shared->log_lock);
+            //pthread_mutex_lock(&shared->log_lock);
+            set_simulation_end(shared, 1);
+            //pthread_mutex_unlock(&shared->log_lock);
             break;
         }
         usleep(200);

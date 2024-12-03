@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/02 14:22:31 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/03 10:00:16 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void log_action(t_philosopher *philosopher, const char *action)
     shared = philosopher->shared_data;
     timestamp = get_current_time_ms();
     pthread_mutex_lock(&shared->log_lock);
-    if (!shared->simulation_end)
+    if (!is_simulation_end(shared))
         printf("%lld %d %s\n", timestamp, philosopher->id, action);
     pthread_mutex_unlock(&shared->log_lock);
 }
@@ -42,8 +42,8 @@ void smart_sleep(int duration, t_shared *shared)
     long long start_time;
     
     start_time = get_current_time_ms();
-    while (!shared->simulation_end && (get_current_time_ms() - start_time < duration))
-        usleep(50);
+    while (!is_simulation_end(shared) && (get_current_time_ms() - start_time < duration))
+        usleep(100);
 }
 
 int	safe_atoi(const char *str, int *result)
@@ -70,4 +70,21 @@ int	safe_atoi(const char *str, int *result)
 	}
 	*result = (int)(num * sign);
 	return (1);
+}
+
+int	is_simulation_end(t_shared *shared)
+{
+	int	result;
+	
+	pthread_mutex_lock(&shared->simulation_end_lock);
+	result = shared->simulation_end;
+	pthread_mutex_unlock(&shared->simulation_end_lock);
+	return (result);
+}
+
+void	set_simulation_end(t_shared *shared, int value)
+{
+	pthread_mutex_lock(&shared->simulation_end_lock);
+	shared->simulation_end = value;
+	pthread_mutex_unlock(&shared->simulation_end_lock);
 }
