@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 14:20:17 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:38:16 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ void *philosopher_routine(void *arg)
 
 	philosopher = (t_philosopher *)arg;
 	shared = philosopher->shared_data;
+	if (shared->meals_required == 0)
+		return (NULL);
 	while (!is_simulation_end(shared))
 	{
 		if (!is_simulation_end(shared))

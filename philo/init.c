@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/04 11:15:20 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:36:32 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,14 @@ int initialize_simulation(t_shared *shared, int argc, char **argv, int *cleanup_
         return (0);
     }
     *cleanup_flags |= MUTEXES_INITIALIZED;
+    if (shared->meals_required == 0)
+    {
+        clean_up_simulation(NULL, shared, *cleanup_flags);
+        return (0);
+    }
     if (shared->num_philosophers == 1)
     {
-        printf("0 1 has taken a fork\n");
+        printf("1 has taken a fork\n");
         usleep(shared->time_to_die * 1000);
         printf("%lld 1 died\n", get_current_time_ms());
         clean_up_simulation(NULL, shared, *cleanup_flags);
