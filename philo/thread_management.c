@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:14:30 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:28:51 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,25 +14,35 @@
 
 int launch_threads(t_thread_data *data, int *cleanup_flags)
 {
-    int thread_created_count;
+    int i;
 
-    thread_created_count = 0;
-    while (thread_created_count < data->shared->num_philosophers)
+    i = 0;
+    while (i < data->shared->num_philosophers)
     {
-        if (pthread_create(&data->threads[thread_created_count], NULL,
-                           philosopher_routine, (void *)&data->philosophers[thread_created_count]) != 0)
+        if (pthread_create(&data->threads[i], NULL, philosopher_routine, (void *)&data->philosophers[i]) != 0)
         {
-            printf("Error: Failed to create philosopher thread %d.\n", thread_created_count + 1);
+            printf("Error: Failed to create philosopher thread %d.\n", i + 1);
             *cleanup_flags |= THREADS_INITIALIZED;
+            while (i > 0)
+            {
+                i--;
+                pthread_join(data->threads[i], NULL);
+            }
             clean_up_simulation(data, data->shared, *cleanup_flags);
             return (0);
         }
-        thread_created_count++;
+        i++;
     }
     *cleanup_flags |= THREADS_INITIALIZED;
     if (pthread_create(&data->monitor_thread, NULL, monitor_routine, (void *)data) != 0)
     {
         printf("Error: Failed to create monitor thread.\n");
+        i = 0;
+        while (i < data->shared->num_philosophers)
+        {
+            pthread_join(data->threads[i], NULL);
+            i++;
+        }
         clean_up_simulation(data, data->shared, *cleanup_flags);
         return (0);
     }

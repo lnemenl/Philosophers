@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/04 11:02:01 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:03:23 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,9 +92,7 @@ void *monitor_routine(void *arg)
     {
         if (check_termination_conditions(data))
         {
-            //pthread_mutex_lock(&shared->log_lock);
             set_simulation_end(shared, 1);
-            //pthread_mutex_unlock(&shared->log_lock);
             break;
         }
         usleep(200);
