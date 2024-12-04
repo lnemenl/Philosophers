@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 15:05:24 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/04 11:02:01 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int check_all_meals(t_shared *shared, t_philosopher *philosophers)
 {
     int i;
 
-    if (shared->meals_required == 0)
-        return (1);
+    if (shared->meals_required == -1)
+        return (0);
     i = 0;
     while (i < shared->num_philosophers)
     {
