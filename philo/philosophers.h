@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:48:53 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:25:20 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,7 @@ typedef struct s_thread_data
 void clean_up_simulation(t_thread_data *data, t_shared *shared, int cleanup_flags);
 
 //initialization functions
-int allocate_memory(t_thread_data *data, t_shared *shared, int *cleanup_flags);
 void initialize_philosopher(t_philosopher *philosopher, int id, t_shared *shared);
-int init_log_mutex(t_shared *shared);
-int init_shared_data(t_shared *shared, char **argv);
 int init_forks(t_shared *shared, int *cleanup_flags);
 int allocate_thread_data(t_thread_data *data, t_shared *shared, int *cleanup_flags);
 int initialize_simulation(t_shared *shared, int argc, char **argv, int *cleanup_flags);
@@ -78,9 +75,7 @@ void *monitor_routine(void *arg);
 
 //parsing functions
 int is_numeric(const char *str);
-int validate_arguments(t_shared *shared);
-int parse_arguments(int argc, char **argv, t_shared *shared);
-int parse_shared_parameters(t_shared *shared, char **argv);
+int parse_and_validate(int argc, char **argv, t_shared *shared);
 
 //routine functions
 int take_forks(t_philosopher *philosopher);

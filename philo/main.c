@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:08:49 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/02 14:20:46 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:15:09 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,11 @@ int main(int argc, char **argv)
     if (!allocate_thread_data(&data, &shared, &cleanup_flags))
     {
         printf("Error: Failed to allocate thread data.\n");
+        clean_up_simulation(NULL, &shared, cleanup_flags);
+        return (1);
+    }
+    if (!init_forks(&shared, &cleanup_flags))
+    {
         clean_up_simulation(&data, &shared, cleanup_flags);
         return (1);
     }
@@ -39,3 +44,4 @@ int main(int argc, char **argv)
     clean_up_simulation(&data, &shared, cleanup_flags);
     return (0);
 }
+

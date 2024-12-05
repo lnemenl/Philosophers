@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/04 12:50:58 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:05:28 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,74 +30,37 @@ int is_numeric(const char *str)
     return (1);
 }
 
-int validate_arguments(t_shared *shared)
-{
-    if (shared->num_philosophers <= 0 || shared->time_to_die <= 0 ||
-        shared->time_to_eat <= 0 || shared->time_to_sleep <= 0)
-    {
-        printf("Error: All parameters must be positive integers.\n");
-        return (0);
-    }
-    if (shared->meals_required < -1)
-        return (0);
-    return (1);
-}
-
-
-int parse_shared_parameters(t_shared *shared, char **argv)
+int parse_and_validate(int argc, char **argv, t_shared *shared)
 {
     int result;
 
-    if (!safe_atoi(argv[1], &result) || result <= 0)
+    if (argc != 5 && argc != 6)
+        return (0);
+    if (!is_numeric(argv[1]) || !safe_atoi(argv[1], &result) || result <= 0)
         return (0);
     shared->num_philosophers = result;
-    if (!safe_atoi(argv[2], &result) || result <= 0)
+    if (!is_numeric(argv[2]) || !safe_atoi(argv[2], &result) || result <= 0)
         return (0);
     shared->time_to_die = result;
-    if (!safe_atoi(argv[3], &result) || result <= 0)
+    if (!is_numeric(argv[3]) || !safe_atoi(argv[3], &result) || result <= 0)
         return (0);
     shared->time_to_eat = result;
-    if (!safe_atoi(argv[4], &result) || result <= 0)
+    if (!is_numeric(argv[4]) || !safe_atoi(argv[4], &result) || result <= 0)
         return (0);
     shared->time_to_sleep = result;
-    if (argv[5])
+    if (argc == 6)
     {
-        if (!safe_atoi(argv[5], &result) || result < 0)
+        if (!is_numeric(argv[5]) || !safe_atoi(argv[5], &result) || result < 0)
             return (0);
         shared->meals_required = result;
     }
     else
-        shared->meals_required = -1;
-    return (1);
-}
-
-int parse_arguments(int argc, char **argv, t_shared *shared)
-{
-    int value;
-
-    if (argc != 5 && argc != 6)
-        return (0);
-    if (!is_numeric(argv[1]) || !safe_atoi(argv[1], &value) || value <= 0)
-        return (0);
-    shared->num_philosophers = value;
-    if (!is_numeric(argv[2]) || !safe_atoi(argv[2], &value) || value <= 0)
-        return (0);
-    shared->time_to_die = value;
-    if (!is_numeric(argv[3]) || !safe_atoi(argv[3], &value) || value <= 0)
-        return (0);
-    shared->time_to_eat = value;
-    if (!is_numeric(argv[4]) || !safe_atoi(argv[4], &value) || value <= 0)
-        return (0);
-    shared->time_to_sleep = value;
-    if (argc == 6)
     {
-        if (!is_numeric(argv[5]) || !safe_atoi(argv[5], &value) || value < 0)
-            return (0);
-        shared->meals_required = value;
-    }
-    else
         shared->meals_required = -1;
-    if (!validate_arguments(shared))
+    }
+    if (shared->num_philosophers <= 0 || shared->time_to_die <= 0 ||
+        shared->time_to_eat <= 0 || shared->time_to_sleep <= 0)
         return (0);
+
     return (1);
 }
