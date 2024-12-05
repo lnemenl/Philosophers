@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/04 12:43:57 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/05 09:09:23 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ int check_all_meals(t_shared *shared, t_philosopher *philosophers)
 {
     int i;
 
-    if (shared->meals_required == 0)
-        return (1);
+    if (shared->meals_required == -1)
+        return (0);
     i = 0;
     while (i < shared->num_philosophers)
     {
@@ -85,14 +85,11 @@ int check_termination_conditions(t_thread_data *data)
 
 void *monitor_routine(void *arg)
 {
-    t_thread_data *data = (t_thread_data *)arg;
-    t_shared *shared = data->shared;
+    t_thread_data *data;
+    t_shared *shared;
     
-    if (shared->meals_required == 0)
-    {
-        set_simulation_end(shared, 1);
-        return (NULL);
-    }
+    data = (t_thread_data *)arg;
+    shared = data->shared;
     while (!is_simulation_end(shared))
     {
         if (check_termination_conditions(data))
