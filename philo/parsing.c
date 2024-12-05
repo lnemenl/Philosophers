@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:09:17 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/05 10:05:28 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/05 10:41:54 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ int parse_and_validate(int argc, char **argv, t_shared *shared)
         if (!is_numeric(argv[5]) || !safe_atoi(argv[5], &result) || result < 0)
             return (0);
         shared->meals_required = result;
+        if(shared->meals_required == 0)
+            return (0);
     }
     else
     {
