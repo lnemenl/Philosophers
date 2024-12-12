@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/05 09:09:45 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:48:53 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,10 @@ int take_forks(t_philosopher *philosopher)
         first_fork = philosopher->right_fork;
         second_fork = philosopher->left_fork;
     }
-    pthread_mutex_lock(first_fork);
+	pthread_mutex_lock(&philosopher->meal_lock);
+	philosopher->last_meal_time = get_current_time_ms();
+    pthread_mutex_unlock(&philosopher->meal_lock);
+	pthread_mutex_lock(first_fork);
     log_action(philosopher, "has taken a fork");
     if (is_simulation_end(shared))
     {

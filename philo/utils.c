@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/03 10:00:16 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:11:13 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void smart_sleep(int duration, t_shared *shared)
     
     start_time = get_current_time_ms();
     while (!is_simulation_end(shared) && (get_current_time_ms() - start_time < duration))
-        usleep(100);
+        usleep(50);
 }
 
 int	safe_atoi(const char *str, int *result)

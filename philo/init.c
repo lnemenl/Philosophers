@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/05 10:29:31 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/12 11:21:02 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,6 @@ int initialize_simulation(t_shared *shared, int argc, char **argv, int *cleanup_
         return (0);
     }
     shared->simulation_end = 0;
-
     if (pthread_mutex_init(&shared->simulation_end_lock, NULL) != 0)
         return (0);
     shared->forks = malloc(sizeof(pthread_mutex_t) * shared->num_philosophers);

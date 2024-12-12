@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/05 09:09:23 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/12 13:53:43 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void *monitor_routine(void *arg)
             set_simulation_end(shared, 1);
             break;
         }
-        usleep(200);
+        usleep(50);
     }
     return (NULL);
 }
