@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:05:19 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/13 17:08:37 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,10 +92,7 @@ void	*monitor_routine(void *arg)
 	while (!is_simulation_end(shared))
 	{
 		if (check_termination_conditions(data))
-		{
-			set_simulation_end(shared, 1);
 			break ;
-		}
 		usleep(50);
 	}
 	return (NULL);

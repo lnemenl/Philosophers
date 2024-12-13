@@ -6,14 +6,14 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:08:49 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:03:54 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/13 16:28:54 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
 static int	initialize_simulation_data(t_shared *shared,
-										int argc, char **argv, int *flags)
+	int argc, char **argv, int *flags)
 {
 	if (!initialize_simulation(shared, argc, argv, flags))
 	{
@@ -24,7 +24,7 @@ static int	initialize_simulation_data(t_shared *shared,
 }
 
 static int	allocate_and_init_resources(t_shared *shared,
-										t_thread_data *data, int *flags)
+	t_thread_data *data, int *flags)
 {
 	if (!allocate_thread_data(data, shared, flags))
 	{
@@ -41,7 +41,7 @@ static int	allocate_and_init_resources(t_shared *shared,
 }
 
 static int	launch_simulation_threads(t_shared *shared,
-										t_thread_data *data, int *flags)
+	t_thread_data *data, int *flags)
 {
 	if (!launch_threads(data, flags))
 	{
