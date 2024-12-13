@@ -6,18 +6,11 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:07:31 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/13 12:30:54 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-static void	update_last_meal_time(t_philosopher *philosopher)
-{
-	pthread_mutex_lock(&philosopher->meal_lock);
-	philosopher->last_meal_time = get_current_time_ms();
-	pthread_mutex_unlock(&philosopher->meal_lock);
-}
 
 static void	get_forks_order(t_philosopher *philosopher,
 							pthread_mutex_t **first_fork,

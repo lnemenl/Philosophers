@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:02:11 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/13 12:25:48 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,32 +43,6 @@ int	init_forks(t_shared *shared, int *cleanup_flags)
 		i++;
 	}
 	*cleanup_flags |= MUTEXES_INITIALIZED;
-	return (1);
-}
-
-int	allocate_thread_data(t_thread_data *data,
-							t_shared *shared, int *cleanup_flags)
-{
-	int	i;
-
-	data->threads = malloc(sizeof(pthread_t) * shared->num_philosophers);
-	if (!data->threads)
-		return (0);
-	data->philosophers = malloc(sizeof(t_philosopher)
-			* shared->num_philosophers);
-	if (!data->philosophers)
-	{
-		free(data->threads);
-		return (0);
-	}
-	*cleanup_flags |= MEMORY_ALLOCATED;
-	i = 0;
-	while (i < shared->num_philosophers)
-	{
-		initialize_philosopher(&data->philosophers[i], i + 1, shared);
-		i++;
-	}
-	data->shared = shared;
 	return (1);
 }
 

@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:12:47 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/13 12:29:37 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,21 +71,4 @@ int	safe_atoi(const char *str, int *result)
 	}
 	*result = (int)(num * sign);
 	return (1);
-}
-
-int	is_simulation_end(t_shared *shared)
-{
-	int	result;
-
-	pthread_mutex_lock(&shared->simulation_end_lock);
-	result = shared->simulation_end;
-	pthread_mutex_unlock(&shared->simulation_end_lock);
-	return (result);
-}
-
-void	set_simulation_end(t_shared *shared, int value)
-{
-	pthread_mutex_lock(&shared->simulation_end_lock);
-	shared->simulation_end = value;
-	pthread_mutex_unlock(&shared->simulation_end_lock);
 }

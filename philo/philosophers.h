@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:21:57 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/13 12:31:23 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,5 +95,6 @@ void		smart_sleep(int duration, t_shared *shared);
 int			safe_atoi(const char *str, int *result);
 int			is_simulation_end(t_shared *shared);
 void		set_simulation_end(t_shared *shared, int value);
+void		update_last_meal_time(t_philosopher *philosopher);
 
 #endif
