@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:25:48 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/14 23:26:46 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,9 +68,13 @@ static int	initialize_mutexes(t_shared *shared, int *cleanup_flags)
 
 static int	handle_single_philosopher(t_shared *shared, int *cleanup_flags)
 {
-	printf("1 has taken a fork\n");
+	t_philosopher	single_philo;
+
+	single_philo.id = 1;
+	single_philo.shared_data = shared;
+	log_action(&single_philo, "has taken a fork");
 	usleep(shared->time_to_die * 1000);
-	printf("%lld 1 died\n", get_current_time_ms());
+	log_action(&single_philo, "died");
 	clean_up_simulation(NULL, shared, *cleanup_flags);
 	return (0);
 }
@@ -80,7 +84,7 @@ int	initialize_simulation(t_shared *shared,
 {
 	if (!parse_and_validate(argc, argv, shared))
 	{
-		printf("Error: Invalid arguments.\n");
+		log_error("Error: Invalid arguments.");
 		return (0);
 	}
 	shared->simulation_end = 0;

@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:26:00 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/14 23:30:39 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ static int	create_monitor_thread(t_thread_data *data)
 	if (pthread_create(&data->monitor_thread,
 			NULL, monitor_routine, (void *)data) != 0)
 	{
-		printf("Error: Failed to create monitor thread.\n");
+		log_error("Error: Failed to create monitor thread.");
 		i = 0;
 		while (i < data->shared->num_philosophers)
 		{
