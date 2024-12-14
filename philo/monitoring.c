@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 17:08:37 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/14 04:14:45 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,16 +15,21 @@
 int	check_philosopher_death(t_philosopher *philosopher)
 {
 	long long	current_time;
+	long long	user_friendly_time;
 	t_shared	*shared;
 
 	shared = philosopher->shared_data;
 	current_time = get_current_time_ms();
+	user_friendly_time = current_time - shared->start_time;
 	pthread_mutex_lock(&philosopher->meal_lock);
-	if (current_time - philosopher->last_meal_time > shared->time_to_die)
+	if (current_time - philosopher->last_meal_time >= shared->time_to_die)
 	{
 		pthread_mutex_lock(&shared->log_lock);
 		if (!is_simulation_end(shared))
-			printf("%lld %d died\n", current_time, philosopher->id);
+		{
+			set_simulation_end(shared, 1);
+			printf("%lld %d died\n", user_friendly_time, philosopher->id);
+		}
 		pthread_mutex_unlock(&shared->log_lock);
 		pthread_mutex_unlock(&philosopher->meal_lock);
 		return (1);
@@ -93,7 +98,7 @@ void	*monitor_routine(void *arg)
 	{
 		if (check_termination_conditions(data))
 			break ;
-		usleep(50);
+		usleep(1000);
 	}
 	return (NULL);
 }

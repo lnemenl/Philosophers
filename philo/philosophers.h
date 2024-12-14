@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:31:23 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/14 03:35:02 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_shared
 	pthread_mutex_t		simulation_end_lock;
 	pthread_mutex_t		*forks;
 	pthread_mutex_t		log_lock;
+	long long			start_time;
 }						t_shared;
 
 typedef struct s_thread_data
@@ -95,6 +96,7 @@ void		smart_sleep(int duration, t_shared *shared);
 int			safe_atoi(const char *str, int *result);
 int			is_simulation_end(t_shared *shared);
 void		set_simulation_end(t_shared *shared, int value);
-void		update_last_meal_time(t_philosopher *philosopher);
+size_t		ft_strlen(const char *s);
+void		log_error(const char *msg);
 
 #endif

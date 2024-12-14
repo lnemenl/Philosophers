@@ -6,7 +6,7 @@
 #    By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 18:06:36 by rkhakimu          #+#    #+#              #
-#    Updated: 2024/12/13 12:31:41 by rkhakimu         ###   ########.fr        #
+#    Updated: 2024/12/14 02:55:52 by rkhakimu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ SRC_FILES			= cleanup.c \
 					  routine.c \
 					  thread_management.c \
 					  utils.c \
-					  utils_additional.c
+					  utils_additional.c \
 
 OBJ_FILES			= $(SRC_FILES:.c=.o)
 

@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/13 12:29:22 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/13 12:31:28 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/14 02:47:27 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,20 @@ void	set_simulation_end(t_shared *shared, int value)
 	pthread_mutex_unlock(&shared->simulation_end_lock);
 }
 
-void	update_last_meal_time(t_philosopher *philosopher)
+size_t ft_strlen(const char *s)
 {
-	pthread_mutex_lock(&philosopher->meal_lock);
-	philosopher->last_meal_time = get_current_time_ms();
-	pthread_mutex_unlock(&philosopher->meal_lock);
+    size_t len;
+	len = 0;
+    while (s[len])
+        len++;
+    return (len);
+}
+
+void log_error(const char *msg)
+{
+    int len;
+
+    len = ft_strlen(msg);
+    write(STDERR_FILENO, msg, len);
+    write(STDERR_FILENO, "\n", 1);
 }
