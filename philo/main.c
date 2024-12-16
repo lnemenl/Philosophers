@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/14 15:08:49 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/14 02:23:52 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:17:56 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ static int	allocate_and_init_resources(t_shared *shared,
 {
 	if (!allocate_thread_data(data, shared, flags))
 	{
-		log_error("Error: Failed to allocate thread data");
+		log_error("Error: Failed to allocate thread data.");
 		clean_up_simulation(NULL, shared, *flags);
 		return (0);
 	}
@@ -45,7 +45,7 @@ static int	launch_simulation_threads(t_shared *shared,
 {
 	if (!launch_threads(data, flags))
 	{
-		log_error("Error: Failed to launch threads");
+		log_error("Error: Failed to launch threads.");
 		clean_up_simulation(data, shared, *flags);
 		return (0);
 	}

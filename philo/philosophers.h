@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/14 03:35:02 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:18:59 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,12 +91,14 @@ int			launch_threads(t_thread_data *data, int *cleanup_flags);
 
 //utilities functions
 long long	get_current_time_ms(void);
-void		log_action(t_philosopher *philosopher, const char *action);
 void		smart_sleep(int duration, t_shared *shared);
 int			safe_atoi(const char *str, int *result);
 int			is_simulation_end(t_shared *shared);
 void		set_simulation_end(t_shared *shared, int value);
-size_t		ft_strlen(const char *s);
-void		log_error(const char *msg);
+void		update_last_meal_time(t_philosopher *philosopher);
+
+//logs functions
+void		log_action(t_philosopher *philosopher, const char *action);
+void		log_error(const char *message);
 
 #endif

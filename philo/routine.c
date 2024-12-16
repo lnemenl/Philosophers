@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/14 03:37:49 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:19:43 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,45 +16,46 @@ static void get_forks_order(t_philosopher *philosopher,
                             pthread_mutex_t **first_fork,
                             pthread_mutex_t **second_fork)
 {
-    int left_id = philosopher->id - 1;
-    int right_id = philosopher->id % philosopher->shared_data->num_philosophers;
-
-    if (left_id < right_id)
-    {
-        *first_fork = philosopher->left_fork;
-        *second_fork = philosopher->right_fork;
-    }
-    else
-    {
-        *first_fork = philosopher->right_fork;
-        *second_fork = philosopher->left_fork;
-    }
-}
-
-int	take_forks(t_philosopher *philosopher)
-{
-	t_shared		*shared;
-	pthread_mutex_t	*first_fork;
-	pthread_mutex_t	*second_fork;
+	t_shared	*shared;
 
 	shared = philosopher->shared_data;
-	get_forks_order(philosopher, &first_fork, &second_fork);
-	pthread_mutex_lock(first_fork);
-	if (is_simulation_end(shared))
+	if (philosopher->id % shared->num_philosophers == 0)
 	{
-		pthread_mutex_unlock(first_fork);
-		return (0);
+		*first_fork = philosopher->right_fork;
+		*second_fork = philosopher->left_fork;
 	}
-	log_action(philosopher, "has taken a fork");
-	pthread_mutex_lock(second_fork);
-	if (is_simulation_end(shared))
+	else
 	{
-		pthread_mutex_unlock(second_fork);
-		pthread_mutex_unlock(first_fork);
-		return (0);
+		*first_fork = philosopher->left_fork;
+		*second_fork = philosopher->right_fork;
 	}
-	log_action(philosopher, "has taken a fork");
-	return (1);
+}
+
+int take_forks(t_philosopher *philosopher)
+{
+    t_shared        *shared;
+    pthread_mutex_t *first_fork;
+    pthread_mutex_t *second_fork;
+
+    shared = philosopher->shared_data;
+    get_forks_order(philosopher, &first_fork, &second_fork);
+    pthread_mutex_lock(first_fork);
+    log_action(philosopher, "has taken a fork");
+    if (is_simulation_end(shared))
+    {
+        pthread_mutex_unlock(first_fork);
+        return (0);
+    }
+    update_last_meal_time(philosopher);
+    pthread_mutex_lock(second_fork);
+    log_action(philosopher, "has taken a fork");
+    if (is_simulation_end(shared))
+    {
+        pthread_mutex_unlock(second_fork);
+        pthread_mutex_unlock(first_fork);
+        return (0);
+    }
+    return (1);
 }
 
 void	put_forks(t_philosopher *philosopher)
@@ -93,8 +94,7 @@ void	*philosopher_routine(void *arg)
 		usleep(1000);
 	while (!is_simulation_end(shared))
 	{
-		if (!is_simulation_end(shared))
-			log_action(philosopher, "is thinking");
+		log_action(philosopher, "is thinking");
 		if (is_simulation_end(shared) || !take_forks(philosopher))
 			break ;
 		if (is_simulation_end(shared) || !eat(philosopher))

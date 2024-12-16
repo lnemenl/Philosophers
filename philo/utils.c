@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/14 04:44:38 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:20:50 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,18 @@
 long long	get_current_time_ms(void)
 {
 	struct timeval	tv;
+	static long long	start = -1;
+	long long		current;
 
 	if (gettimeofday(&tv, NULL) != 0)
 	{
 		log_error("Error: Failed to get current time");
 		return (0);
 	}
-	return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
-}
-
-void	log_action(t_philosopher *philosopher, const char *action)
-{
-	t_shared	*shared;
-	long long	timestamp;
-
-	shared = philosopher->shared_data;
-	pthread_mutex_lock(&shared->log_lock);
-	if (!is_simulation_end(shared))
-	{
-		timestamp = get_current_time_ms() - shared->start_time;
-		printf("%lld %d %s\n", timestamp, philosopher->id, action);
-	}
-	pthread_mutex_unlock(&shared->log_lock);
+	current = (tv.tv_sec * 1000) + (tv.tv_usec / 1000);
+	if (start == -1)
+		start = current;
+	return (current - start);
 }
 
 void	smart_sleep(int duration, t_shared *shared)
@@ -46,7 +36,7 @@ void	smart_sleep(int duration, t_shared *shared)
 	start_time = get_current_time_ms();
 	while (!is_simulation_end(shared)
 		&& (get_current_time_ms() - start_time < duration))
-		usleep(1000);
+		usleep(10);
 }
 
 int	safe_atoi(const char *str, int *result)

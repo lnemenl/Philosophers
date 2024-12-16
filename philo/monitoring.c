@@ -6,36 +6,35 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/14 04:14:45 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:18:37 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int	check_philosopher_death(t_philosopher *philosopher)
+int check_philosopher_death(t_philosopher *philosopher)
 {
-	long long	current_time;
-	long long	user_friendly_time;
-	t_shared	*shared;
+    long long current_time;
+    long long last_meal;
+    t_shared *shared;
 
-	shared = philosopher->shared_data;
-	current_time = get_current_time_ms();
-	user_friendly_time = current_time - shared->start_time;
-	pthread_mutex_lock(&philosopher->meal_lock);
-	if (current_time - philosopher->last_meal_time >= shared->time_to_die)
-	{
-		pthread_mutex_lock(&shared->log_lock);
-		if (!is_simulation_end(shared))
-		{
-			set_simulation_end(shared, 1);
-			printf("%lld %d died\n", user_friendly_time, philosopher->id);
-		}
-		pthread_mutex_unlock(&shared->log_lock);
-		pthread_mutex_unlock(&philosopher->meal_lock);
-		return (1);
-	}
-	pthread_mutex_unlock(&philosopher->meal_lock);
-	return (0);
+    shared = philosopher->shared_data;
+    current_time = get_current_time_ms();
+    pthread_mutex_lock(&philosopher->meal_lock);
+    last_meal = philosopher->last_meal_time;
+    pthread_mutex_unlock(&philosopher->meal_lock);
+    if (current_time - last_meal >= shared->time_to_die)
+    {
+        pthread_mutex_lock(&shared->log_lock);
+        if (!is_simulation_end(shared))
+        {
+            set_simulation_end(shared, 1);
+            printf("%lld %d died\n", current_time, philosopher->id);
+        }
+        pthread_mutex_unlock(&shared->log_lock);
+        return (1);
+    }
+    return (0);
 }
 
 int	check_all_meals(t_shared *shared, t_philosopher *philosophers)
@@ -97,8 +96,8 @@ void	*monitor_routine(void *arg)
 	while (!is_simulation_end(shared))
 	{
 		if (check_termination_conditions(data))
-			break ;
-		usleep(1000);
+			break;
+		usleep(50);
 	}
 	return (NULL);
 }
