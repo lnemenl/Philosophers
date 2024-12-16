@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/15 00:12:26 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/16 16:46:11 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ void	*philosopher_routine(void *arg)
 
 	philosopher = (t_philosopher *)arg;
 	shared = philosopher->shared_data;
-	if (philosopher->id % 2 == 0)
-        usleep(1000);
 	while (!is_simulation_end(shared))
 	{
 		log_action(philosopher, "is thinking");
