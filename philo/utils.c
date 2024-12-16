@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/16 18:20:50 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/16 18:34:54 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,4 +63,11 @@ int	safe_atoi(const char *str, int *result)
 	}
 	*result = (int)(num * sign);
 	return (1);
+}
+
+void	update_last_meal_time(t_philosopher *philosopher)
+{
+	pthread_mutex_lock(&philosopher->meal_lock);
+	philosopher->last_meal_time = get_current_time_ms();
+	pthread_mutex_unlock(&philosopher->meal_lock);
 }
