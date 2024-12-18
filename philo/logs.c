@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 23:22:55 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/16 18:35:20 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/18 07:16:08 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ size_t	ft_strlen(const char *str)
 		i++;
 	return (i);
 }
+
 void	log_error(const char *message)
 {
 	int	len;

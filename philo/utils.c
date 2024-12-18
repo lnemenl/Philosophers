@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/16 18:34:54 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/18 07:22:15 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 
 long long	get_current_time_ms(void)
 {
-	struct timeval	tv;
-	static long long	start = -1;
-	long long		current;
+	struct timeval		tv;
+	static long long	start;
+	long long			current;
 
+	start = -1;
 	if (gettimeofday(&tv, NULL) != 0)
 	{
 		log_error("Error: Failed to get current time");
