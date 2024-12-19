@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/19 14:54:15 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 17:07:27 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,16 @@ static void	get_forks_order(t_philosopher *philosopher,
 	t_shared	*shared;
 
 	shared = philosopher->shared_data;
-	*first_fork = philosopher->left_fork;
-	*second_fork = philosopher->right_fork;
+	if (philosopher->id % 2 == 1)
+	{
+		*first_fork = philosopher->left_fork;
+		*second_fork = philosopher->right_fork;
+	}
+	else
+	{
+		*first_fork = philosopher->right_fork;
+		*second_fork = philosopher->left_fork;
+	}
 }
 
 int	take_forks(t_philosopher *philosopher)
@@ -62,11 +70,11 @@ int	eat(t_philosopher *philosopher)
 	shared = philosopher->shared_data;
 	if (is_simulation_end(shared))
 		return (0);
-	log_action(philosopher, "is eating");
 	pthread_mutex_lock(&philosopher->meal_lock);
 	philosopher->last_meal_time = get_current_time_ms();
 	philosopher->meals_eaten++;
 	pthread_mutex_unlock(&philosopher->meal_lock);
+	log_action(philosopher, "is eating");
 	smart_sleep(shared->time_to_eat, shared);
 	return (1);
 }
