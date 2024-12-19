@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/18 07:15:25 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:35:05 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	initialize_simulation(t_shared *shared,
 		log_error("Error: Invalid arguments");
 		return (0);
 	}
-	shared->start_time = get_current_time_ms();
+	get_current_time_ms();
 	shared->simulation_end = 0;
 	if (!initialize_mutexes(shared, cleanup_flags))
 		return (0);

@@ -1,9 +1,0 @@
-{
-    "files.associations": {
-        "philosophers.h": "c",
-        "time.h": "c",
-        "unistd.h": "c",
-        "pthread.h": "c"
-    },
-    "functionHeaderExtension.headerFilePath": "/Users/r/42/projects/Philosophers/inc/philosophers.h"
-}

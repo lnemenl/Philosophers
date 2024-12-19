@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/18 07:18:54 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:52:01 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,20 @@ int	check_philosopher_death(t_philosopher *philosopher)
 	t_shared	*shared;
 
 	shared = philosopher->shared_data;
-	current_time = get_current_time_ms();
 	pthread_mutex_lock(&philosopher->meal_lock);
+	if (philosopher->last_meal_time == 0)
+	{
+		pthread_mutex_unlock(&philosopher->meal_lock);
+		return (0);
+	}
+	current_time = get_current_time_ms();
 	last_meal = philosopher->last_meal_time;
 	pthread_mutex_unlock(&philosopher->meal_lock);
 	if (current_time - last_meal >= shared->time_to_die)
 	{
 		pthread_mutex_lock(&shared->log_lock);
-		if (!is_simulation_end(shared))
-		{
-			set_simulation_end(shared, 1);
-			printf("%lld %d died\n", current_time, philosopher->id);
-		}
+		set_simulation_end(shared, 1);
+		printf("%lld %d died\n", current_time, philosopher->id);
 		pthread_mutex_unlock(&shared->log_lock);
 		return (1);
 	}
@@ -68,12 +70,7 @@ int	check_termination_conditions(t_thread_data *data)
 	while (i < shared->num_philosophers)
 	{
 		if (check_philosopher_death(&data->philosophers[i]))
-		{
-			pthread_mutex_lock(&shared->log_lock);
-			set_simulation_end(shared, 1);
-			pthread_mutex_unlock(&shared->log_lock);
 			return (1);
-		}
 		i++;
 	}
 	if (check_all_meals(shared, data->philosophers))

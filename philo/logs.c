@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 23:22:55 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/18 07:16:08 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:37:15 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ void	log_action(t_philosopher *philosopher, const char *action)
 	long long	timestamp;
 
 	shared = philosopher->shared_data;
-	timestamp = get_current_time_ms();
 	pthread_mutex_lock(&shared->log_lock);
+	timestamp = get_current_time_ms();
 	if (!is_simulation_end(shared))
 	{
 		ft_putnbr_fd(timestamp, 1);

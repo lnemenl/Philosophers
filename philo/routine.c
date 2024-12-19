@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/18 07:21:41 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:54:15 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,8 @@ static void	get_forks_order(t_philosopher *philosopher,
 	t_shared	*shared;
 
 	shared = philosopher->shared_data;
-	if (philosopher->id % shared->num_philosophers == 0)
-	{
-		*first_fork = philosopher->right_fork;
-		*second_fork = philosopher->left_fork;
-	}
-	else
-	{
-		*first_fork = philosopher->left_fork;
-		*second_fork = philosopher->right_fork;
-	}
+	*first_fork = philosopher->left_fork;
+	*second_fork = philosopher->right_fork;
 }
 
 int	take_forks(t_philosopher *philosopher)
@@ -46,7 +38,6 @@ int	take_forks(t_philosopher *philosopher)
 		pthread_mutex_unlock(first_fork);
 		return (0);
 	}
-	update_last_meal_time(philosopher);
 	pthread_mutex_lock(second_fork);
 	log_action(philosopher, "has taken a fork");
 	if (is_simulation_end(shared))
@@ -77,8 +68,6 @@ int	eat(t_philosopher *philosopher)
 	philosopher->meals_eaten++;
 	pthread_mutex_unlock(&philosopher->meal_lock);
 	smart_sleep(shared->time_to_eat, shared);
-	if (is_simulation_end(shared))
-		return (0);
 	return (1);
 }
 
@@ -89,7 +78,9 @@ void	*philosopher_routine(void *arg)
 
 	philosopher = (t_philosopher *)arg;
 	shared = philosopher->shared_data;
-	philosopher->last_meal_time = get_current_time_ms();
+	update_last_meal_time(philosopher);
+	if (philosopher->id % 2 == 0)
+		usleep(100);
 	while (!is_simulation_end(shared))
 	{
 		log_action(philosopher, "is thinking");
@@ -101,8 +92,9 @@ void	*philosopher_routine(void *arg)
 			break ;
 		}
 		put_forks(philosopher);
-		if (!is_simulation_end(shared))
-			log_action(philosopher, "is sleeping");
+		if (is_simulation_end(shared))
+			break ;
+		log_action(philosopher, "is sleeping");
 		smart_sleep(shared->time_to_sleep, shared);
 	}
 	return (NULL);

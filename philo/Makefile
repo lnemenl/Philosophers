@@ -6,13 +6,13 @@
 #    By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/14 18:06:36 by rkhakimu          #+#    #+#              #
-#    Updated: 2024/12/16 18:35:14 by rkhakimu         ###   ########.fr        #
+#    Updated: 2024/12/18 09:08:40 by rkhakimu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME				= philo
 CC					= cc
-CFLAGS				= -Wall -Wextra -Werror -I./
+CFLAGS				= -Wall -Wextra -Werror
 
 SRC_FILES			= cleanup.c \
 					  main.c \

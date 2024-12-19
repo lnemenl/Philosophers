@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/20 15:43:43 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/16 18:35:01 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 14:16:36 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,6 @@ static int	create_philosopher_threads(t_thread_data *data, int *cleanup_flags)
 				(void *)&data->philosophers[i]) != 0)
 		{
 			log_error("Error: Failed to create philosopher thread");
-			*cleanup_flags |= THREADS_INITIALIZED;
 			while (i > 0)
 			{
 				i--;
