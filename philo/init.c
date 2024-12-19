@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/19 17:10:43 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:26:19 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ static int	handle_single_philosopher(t_shared *shared, int *cleanup_flags)
 	single_philo.id = 1;
 	single_philo.shared_data = shared;
 	log_action(&single_philo, "has taken fork");
-	//usleep(shared->time_to_die * 1000);
 	log_action(&single_philo, "died");
 	clean_up_simulation(NULL, shared, *cleanup_flags);
 	return (0);

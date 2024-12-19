@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/19 17:16:14 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 19:35:48 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	smart_sleep(int duration, t_shared *shared)
 	while (!is_simulation_end(shared)
 		&& (get_current_time_ms() - start_time < duration))
 		usleep(1000);
-		// TODO: set simulation end
 }
 
 int	safe_atoi(const char *str, int *result)
@@ -63,7 +62,10 @@ int	safe_atoi(const char *str, int *result)
 
 void	update_last_meal_time(t_philosopher *philosopher)
 {
+	long long	current_time;
+
+	current_time = get_current_time_ms();
 	pthread_mutex_lock(&philosopher->meal_lock);
-	philosopher->last_meal_time = get_current_time_ms();
+	philosopher->last_meal_time = current_time;
 	pthread_mutex_unlock(&philosopher->meal_lock);
 }
