@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/19 22:19:03 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 01:51:48 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int take_forks(t_philosopher *philosopher)
 {
     pthread_mutex_lock(philosopher->left_fork);
     log_action(philosopher, "has taken a fork", get_current_time_ms());
-	usleep(100);
     pthread_mutex_lock(philosopher->right_fork);
     log_action(philosopher, "has taken a fork", get_current_time_ms());
     return 1;

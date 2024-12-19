@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/19 22:20:00 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 01:53:31 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void *monitor_routine(void *arg)
             pthread_mutex_unlock(&shared->log_lock);
             return (NULL);
         }
-        usleep(200);
+        usleep(100);
     }
     return (NULL);
 }
