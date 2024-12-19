@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/19 19:26:19 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 20:58:49 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,14 +68,20 @@ static int	initialize_mutexes(t_shared *shared, int *cleanup_flags)
 static int	handle_single_philosopher(t_shared *shared, int *cleanup_flags)
 {
 	t_philosopher	single_philo;
+	long long		current_time;
 
 	single_philo.id = 1;
 	single_philo.shared_data = shared;
-	log_action(&single_philo, "has taken fork");
-	log_action(&single_philo, "died");
+	current_time = get_current_time_ms();
+	single_philo.last_meal_time = current_time;
+	log_action(&single_philo, "has taken a fork", current_time);
+	smart_sleep(shared->time_to_die, shared);
+	current_time = get_current_time_ms();
+	log_action(&single_philo, "died", current_time);
 	clean_up_simulation(NULL, shared, *cleanup_flags);
 	return (0);
 }
+
 
 int	initialize_simulation(t_shared *shared,
 							int argc, char **argv, int *cleanup_flags)

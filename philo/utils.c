@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/19 19:35:48 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/19 22:43:27 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,18 @@ long long get_current_time_ms(void)
     return ((tv.tv_sec * 1000) + (tv.tv_usec / 1000));
 }
 
-void	smart_sleep(int duration, t_shared *shared)
+void smart_sleep(int duration, t_shared *shared)
 {
-	long long	start_time;
+    long long start_time = get_current_time_ms();
+    long long current_time;
 
-	start_time = get_current_time_ms();
-	while (!is_simulation_end(shared)
-		&& (get_current_time_ms() - start_time < duration))
-		usleep(1000);
+    while (!is_simulation_end(shared))
+    {
+        current_time = get_current_time_ms();
+        if (current_time - start_time >= duration)
+            break ;
+        usleep(50);
+    }
 }
 
 int	safe_atoi(const char *str, int *result)
