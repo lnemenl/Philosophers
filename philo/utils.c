@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:54:42 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/20 12:21:15 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:56:20 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void	smart_sleep(int duration, t_shared *shared)
 		current_time = get_current_time_ms();
 		if (current_time - start_time >= duration)
 			break ;
-		usleep(100);
+		usleep(1000);
 	}
 }
 

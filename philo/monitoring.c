@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 17:07:05 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/20 12:18:09 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:54:33 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,11 @@ int	check_philosopher_death(t_philosopher *philosopher)
 	shared = philosopher->shared_data;
 	current_time = get_current_time_ms();
 	pthread_mutex_lock(&philosopher->meal_lock);
+	if (philosopher->last_meal_time == 0)
+	{
+		pthread_mutex_unlock(&philosopher->meal_lock);
+		return (0);
+	}
 	last_meal = philosopher->last_meal_time;
 	pthread_mutex_unlock(&philosopher->meal_lock);
 	if (current_time - last_meal >= shared->time_to_die)
