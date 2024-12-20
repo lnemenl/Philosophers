@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/20 12:19:40 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 13:04:33 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	*philosopher_routine(void *arg)
 	shared = philosopher->shared_data;
 	update_last_meal_time(philosopher);
 	if (philosopher->id % 2 == 0)
-		usleep(100);
+		usleep(50);
 	while (!is_simulation_end(shared))
 	{
 		log_action(philosopher, "is thinking", get_current_time_ms());
