@@ -6,19 +6,19 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/20 12:12:11 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:19:40 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-int take_forks(t_philosopher *philosopher)
+int	take_forks(t_philosopher *philosopher)
 {
-    pthread_mutex_lock(philosopher->left_fork);
-    log_action(philosopher, "has taken a fork", get_current_time_ms());
-    pthread_mutex_lock(philosopher->right_fork);
-    log_action(philosopher, "has taken a fork", get_current_time_ms());
-    return 1;
+	pthread_mutex_lock(philosopher->left_fork);
+	log_action(philosopher, "has taken a fork", get_current_time_ms());
+	pthread_mutex_lock(philosopher->right_fork);
+	log_action(philosopher, "has taken a fork", get_current_time_ms());
+	return (1);
 }
 
 void	put_forks(t_philosopher *philosopher)
@@ -59,11 +59,11 @@ void	*philosopher_routine(void *arg)
 	{
 		log_action(philosopher, "is thinking", get_current_time_ms());
 		if (is_simulation_end(shared) || !take_forks(philosopher))
-			break;
+			break ;
 		if (is_simulation_end(shared) || !eat(philosopher))
 		{
 			put_forks(philosopher);
-			break;
+			break ;
 		}
 		put_forks(philosopher);
 		log_action(philosopher, "is sleeping", get_current_time_ms());

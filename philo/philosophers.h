@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 23:49:30 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/20 12:11:00 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:18:47 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,8 @@ void		set_simulation_end(t_shared *shared, int value);
 void		update_last_meal_time(t_philosopher *philosopher);
 
 //logs functions
-void		log_action(t_philosopher *philosopher, const char *action, long long current_time);
+void		log_action(t_philosopher *philosopher,
+				const char *action, long long current_time);
 void		log_error(const char *message);
 
 #endif

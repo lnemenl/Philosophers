@@ -6,13 +6,14 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 23:22:55 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/20 12:10:20 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:15:55 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	log_action(t_philosopher *philosopher, const char *action, long long current_time)
+void	log_action(t_philosopher *philosopher,
+					const char *action, long long current_time)
 {
 	t_shared	*shared;
 
@@ -20,7 +21,8 @@ void	log_action(t_philosopher *philosopher, const char *action, long long curren
 	pthread_mutex_lock(&shared->log_lock);
 	if (!is_simulation_end(shared))
 	{
-		printf("%lld %d %s\n", current_time - shared->start_time, philosopher->id, action);
+		printf("%lld %d %s\n",
+			current_time - shared->start_time, philosopher->id, action);
 	}
 	pthread_mutex_unlock(&shared->log_lock);
 }
