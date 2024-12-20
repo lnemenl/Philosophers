@@ -6,33 +6,11 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:42:21 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/20 01:51:48 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:12:11 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
-
-// static void	get_forks_order(t_philosopher *philosopher,
-// 							pthread_mutex_t **first_fork,
-// 							pthread_mutex_t **second_fork)
-// {
-// 	int	left_fork_num;
-// 	int	right_fork_num;
-
-// 	left_fork_num = philosopher->id;
-// 	right_fork_num = (philosopher->id % philosopher->shared_data->num_philosophers) + 1;
-
-// 	if (left_fork_num < right_fork_num)
-// 	{
-// 		*first_fork = philosopher->left_fork;
-// 		*second_fork = philosopher->right_fork;
-// 	}
-// 	else
-// 	{
-// 		*first_fork = philosopher->right_fork;
-// 		*second_fork = philosopher->left_fork;
-// 	}
-// }
 
 int take_forks(t_philosopher *philosopher)
 {

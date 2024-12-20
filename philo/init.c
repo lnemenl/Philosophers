@@ -6,7 +6,7 @@
 /*   By: rkhakimu <rkhakimu@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/26 16:36:47 by rkhakimu          #+#    #+#             */
-/*   Updated: 2024/12/19 20:58:49 by rkhakimu         ###   ########.fr       */
+/*   Updated: 2024/12/20 12:10:44 by rkhakimu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ static int	handle_single_philosopher(t_shared *shared, int *cleanup_flags)
 	clean_up_simulation(NULL, shared, *cleanup_flags);
 	return (0);
 }
-
 
 int	initialize_simulation(t_shared *shared,
 							int argc, char **argv, int *cleanup_flags)
