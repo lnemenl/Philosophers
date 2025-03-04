@@ -127,7 +127,7 @@ Where `timestamp_in_ms` shows milliseconds since simulation start and `X` is the
 ---
 
 ## License
-Licensed under the [MIT License](LICENSE). Use it, mod it, share it—just keep the copyright notice intact.
+Use it, mod it, share it—just keep the copyright notice intact.
 Copyright © 2024 Rus.
 
 ---
