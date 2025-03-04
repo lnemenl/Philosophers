@@ -30,8 +30,8 @@ Welcome to **Philosophers**, a multithreaded journey into the classic dining phi
 ## Installation
 1. Clone the repo:
    ```bash
-   git clone https://github.com:lnemenl/Philosophers.git
-   cd philo/philo
+   git clone https://github.com/lnemenl/Philosophers.git
+   cd Philosophers/philo
    ```
 2. Compile it:
    ```bash
