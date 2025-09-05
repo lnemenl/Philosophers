@@ -1,8 +1,4 @@
 # Philosophers
-<p align="center">
-  <img src="https://raw.githubusercontent.com/ayogun/42-project-badges/refs/heads/main/covers/cover-philosophers.png" alt="Minitalk Cover">
-</p>
-<img src="https://img.shields.io/badge/Score-100%2F100-brightgreen" alt="Score Badge">
 
 *I never thought philosophy would be so deadly*
 
